@@ -1,19 +1,19 @@
-[![Stargazers][stars-shield]][stars-url]
-[![Forks][forks-shield]][forks-url]
-[![Contributors][contributors-shield]][contributors-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![Instagram][instagram-shield]][instagram-url]
+[![Stargazers][stars-shield]][stars-url] [![Forks][forks-shield]][forks-url] [![Contributors][contributors-shield]][contributors-url]
+[![Issues][issues-shield]][issues-url] [![MIT License][license-shield]][license-url] [![Instagram][instagram-shield]][instagram-url]
 
 <p align="center"> <img src="https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition/blob/main/WS2812FX_MnP_logo.png" align="center" width="500"/> </p>
 
 # MOOD'n'PARTY Lights - More fun with colorful lights for all!
 
+## Interface
+
+<p align="center"> <img src="https://github.com/BlockThor/MOODnPARTY_LIGHTS_WebInterface/blob/main/imgs/Interface_small.png" align="center" /> </p>
+
 ## Features
 
-- Minimum requirement for the library: only [WS2812FX_MOODnPARTY_Edition](https://github.com/BlockThor/MOODnPARTY_LIGHTS_WebInterface) and [Adafruit NeoPixel library](https://github.com/adafruit/Adafruit_NeoPixel). No `SPIFFS` or `LittleFS`, no `WebSocket`, etc.
-- Developed with HTML, CSS, and JavaScript. No `JQuery` or similar libraries are used, emphasizing simplicity, enhancing performance, providing customization options, reducing dependencies, and ensuring compatibility.
 - Single-page interface with tabs.
+- Developed with HTML, CSS, and JavaScript. No `JQuery` or similar libraries are used, emphasizing simplicity, enhancing performance and providing customization options.
+- Minimum requirement for the library: only [WS2812FX_MOODnPARTY_Edition](https://github.com/BlockThor/MOODnPARTY_LIGHTS_WebInterface) and [Adafruit NeoPixel library](https://github.com/adafruit/Adafruit_NeoPixel). No `SPIFFS` or `LittleFS`, no `WebSocket`, etc.
 - No pre-stored WiFi names and passwords required.
 - No WiFi required at all - can be controlled through soft-AP mode.
 
@@ -38,9 +38,13 @@ No special software required. The lights to be controlled through web browser on
 
 ## ToDo
 
+- [ ] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
+- [ ] Light / Dark color schemes.
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
-- [ ] 
 
+## PS
+
+Tap footer on interface to find out 💎
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
