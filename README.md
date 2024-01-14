@@ -3,7 +3,7 @@
 
 <p align="center"> <img src="https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition/blob/main/WS2812FX_MnP_logo.png" align="center" width="500"/> </p>
 
-# MOOD'n'PARTY Lights - More fun with colorful lights for all!
+# 🟡🟣🟤 MOOD'n'PARTY Lights 🔴🟢🔵 <br> More fun with colorful lights for all!
 
 ## Interface
 
