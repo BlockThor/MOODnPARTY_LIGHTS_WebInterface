@@ -7,7 +7,7 @@
 
 ## Interface
 
-<p align="center"> <img src="https://github.com/BlockThor/MOODnPARTY_LIGHTS_WebInterface/blob/main/imgs/Interface_small.png" align="center" /> </p>
+<p align="center"> <img src="/imgs/Interface_small.png" align="center" /> </p>
 
 ## Features
 
@@ -28,7 +28,7 @@
 
 ## Hardware
 
-1. WS2812b strip - ideally 60 LEDs with high density
+1. WS2812b strip - Ideally 60 LEDs with high density, verical arrangement.
 2. ESP8266 - NodeMCU
 3. Usb cable
 
@@ -41,10 +41,15 @@ No special software required. The lights to be controlled through web browser on
 - [ ] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
 - [ ] Light / Dark color schemes.
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
+- [ ] Presets (samething like Halloween, Circus Combustus, etc)
+- [ ] Custom presets (set of Mode/Submode/Colors(palette)/Speed/Bri/ElementSize/FadeRate)
+- [ ] Timer to switch off
+- [ ] Load time from I-net, Time to Switch On/Off
 
 ## PS
 
-Tap footer on interface to find out 💎
+> [!TIP]
+> Tap footer on interface to find out 💎
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
