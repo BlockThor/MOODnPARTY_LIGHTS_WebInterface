@@ -7,14 +7,14 @@ char index_html[] PROGMEM = R"EOF(
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'/>    
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='64' height='64' viewBox='-1 -1 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle style='stroke:%23000' cx='8' cy='8' r='8'/%3E%3Cpath d='M8 8h8c0-1.5-.4-2.8-1.1-4L8 8z' fill='%23F5AC43'/%3E%3Cpath d='m8 8-6.9 4c.7 1.2 1.7 2.2 2.9 2.9L8 8z' fill='%23515EBB'/%3E%3Cpath d='M8 8v8c1.5 0 2.8-.4 4-1.1L8 8z' fill='%23D0449A'/%3E%3Cpath d='M4 14.9c1.2.7 2.5 1.1 4 1.1V8l-4 6.9z' fill='%237C39B1'/%3E%3Cpath d='M14.9 4c-.7-1.2-1.7-2.2-2.9-2.9L8 8l6.9-4z' fill='%23F8CE33'/%3E%3Cpath d='M8 8H0c0 1.5.4 2.8 1.1 4L8 8z' fill='%23177AC3'/%3E%3Cpath d='m8 8 4 6.9c1.2-.7 2.2-1.7 2.9-2.9L8 8z' fill='%23FE4A29'/%3E%3Cpath d='m8 8 6.9 4c.7-1.2 1.1-2.5 1.1-4H8z' fill='%23F97932'/%3E%3Cpath d='M8 8 1.1 4C.4 5.2 0 6.5 0 8h8z' fill='%231AB3D0'/%3E%3Cpath d='m8 8 4-6.9C10.8.4 9.5 0 8 0v8z' fill='%23FCF222'/%3E%3Cpath d='M8 0C6.5 0 5.2.4 4 1.1L8 8V0z' fill='%2389D31C'/%3E%3Cpath d='M8 8 4 1.1C2.8 1.8 1.8 2.8 1.1 4L8 8z' fill='%2333B634'/%3E%3Ccircle style='stroke:%23fff;fill:%231976ff;paint-order:stroke' cx='8' cy='8' r='3'/%3E%3C/svg%3E"/>
-<title>OV CHENG Cabin LED Control</title>
+<title>{TT}</title>
 <script>const param = {PM};</script>
 <style>#colorDot0{background-color: #{C0};}#colorDot2{background-color: #{C2};}</style>
 <script type='text/javascript' src='main.js'></script>
 <link href='style.css' rel="stylesheet"/>
 </head>
 <body>
-{MT}
+{HD}
 <div class="tab">
 <button class="tablinks" onclick="openTab(event, 'Colors')" id="defaultTab">Colors</button>
 <button class="tablinks" onclick="openTab(event, 'Monomode')" >MonoColor</button>
@@ -182,12 +182,22 @@ FADE_RATE<span>
 <input type='button' value='Scan/Rescan' onclick="scanWiFi(event)"/>
 </div></div>
 <div class='flex-col'>
-<form class='form' name='wifisave'><h4>Connect to network:</h4>
-<input type='text' maxlength='32' placeholder='network' name='n'/>
-<br/>
-<input type='password' maxlength='64' placeholder='password' name='p'/>
-<br/><br/>
-<input type='button' value='Connect/Disconnect' onclick='sendWiFi(event)'></form>
+<form class="form" name="wifisave"><h4>Connect to network:</h4><span class="txt-cont"><svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-wifi" viewBox="0 0 16 16">
+  <path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"></path>
+  <path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091l.016-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"></path>
+</svg>
+<input id="n" type="text" maxlength="32" placeholder="network" name="n"></span>
+
+
+
+<span class="txt-cont" id="p">
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-pass" viewBox="0 0 16 16">
+  <path d="M5.5 5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"></path>
+  <path d="M8 2a2 2 0 0 0 2-2h2.5A1.5 1.5 0 0 1 14 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-13A1.5 1.5 0 0 1 3.5 0H6a2 2 0 0 0 2 2Zm0 1a3.001 3.001 0 0 1-2.83-2H3.5a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5h-1.67A3.001 3.001 0 0 1 8 3Z"></path>
+</svg>
+<input id="pw" type="password" maxlength="64" placeholder="password" name="p"></span>
+
+<br><input id="pwbt" type="button" value="Connect/Disconnect" onclick="sendWiFi(event)"></form>
 </div></div></div>
 
 <div id="GEM" class="tabcontent">

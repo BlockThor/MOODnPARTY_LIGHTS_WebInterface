@@ -191,7 +191,16 @@ console.log(xhttp.status);
 xhttp.open('GET', 'scan', true);
 xhttp.send();
 }
-
+function f(link){
+document.getElementById('n').value = link.innerText || link.textContent;
+if(link.name == 'O'){
+document.getElementById('p').style.display = "none"; 
+document.getElementById('pwbt').focus();
+} else {
+document.getElementById('p').style.display = "";
+document.getElementById('pw').focus();
+}
+}
 function gem() {
 document.getElementById('gem').style.visibility = 'visible';
 }

@@ -1,7 +1,7 @@
 #include <pgmspace.h>
 
 char style_css[] PROGMEM = R"EOF(
-body, .txt, a {
+body, .txt{
 font-family: Verdana, Helvetica, sans-serif;
 max-width: 1300px;
 margin-left: auto;
@@ -15,6 +15,15 @@ user-select: none;
 body {
 background-image: radial-gradient(#555 1px, transparent 1px);
 background-size: 16px 16px;
+}
+a{
+  background: none;
+  color: #999;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+#wifilist + a{
+  text-align: left;
 }
 canvas{
 width: 280px;
@@ -91,13 +100,11 @@ cursor: pointer;
 background-color: #d0d0d0;
 color: #404040;
 }
-
 input[type='color'] {
 position: absolute;
 transform: translateX(-5px);
 visibility: hidden;
 }
-
 input[type='button'] {
 min-height: 40px;
 padding: 10px;
@@ -113,11 +120,43 @@ border: 2px solid #909090;
 input[type='button']:active, ul li:active{
 background-color: #bbb;
 }
+input[type=radio]:checked {
+background: #909090;
+border: 2px solid #909090;
+}
+input[type=radio] + span {
+opacity: 0.4;
+}
+input[type=radio]:checked + span {
+opacity: 1;
+}
+input[type='text'], input[type='password'] {
+	color: black;
+	width: 194px;
+	padding-left: 28px;
+	cursor: text;
+	position: ;
+	left: 5px;
+	border-radius: 6px;
+	}
+input::placeholder{
+  color: #bbb;
+}
+.txt-cont{
+	padding: 4px 8px;
+}
+.svg_icon {
+	position: relative;
+	left: 26px;
+	top: 10px;
+	width: 18px;
+	height: 18px;
+	z-index: 1;
+}
 
 ul {
 list-style-type: none;
 }
-
 ul li {
 display: block;
 cursor: pointer;
@@ -196,6 +235,7 @@ animation: fadeEffect 0.3s;
 width: 280px;
 margin: 10px auto 16px;
 padding: 4px 15px;
+padding-bottom: 16px;
 text-align: center;
 border-radius: 3px;
 box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
@@ -228,35 +268,20 @@ appearance: none;
 min-height: 5px;
 }
 
-input[type=radio]:checked {
-background: #909090;
-border: 2px solid #909090;
-}
-
-input[type=radio] + span {
-opacity: 0.4;
-}
-input[type=radio]:checked + span {
-opacity: 1;
-}
-
 table{
 min-width: 240px;
-margin: auto auto 16px;
+margin: auto auto 8px;
 padding: 6px;
 border-color: #909090;
 }
 th, td{
 padding: 1px;
-border-bottom: 1px solid #404040;
-}
-a{
-background: none;
 }
 footer{
 float: right;
 padding: 10px;
 cursor: pointer;
+background-color: rgba(32,32,32,0.6);
 }
 
 @media screen and (max-width: 750px) {

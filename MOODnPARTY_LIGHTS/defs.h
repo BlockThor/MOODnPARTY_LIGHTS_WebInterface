@@ -1,7 +1,8 @@
 #define LED_PIN 2 // D4 on 
 #define LED_COUNT 60
 
-#define MNP_MAINTITLE "<h1>MOOD'n'PARTY LIGHTS</h1><h4>OINOUSSIAN VIRTUE - Chief Engineer Cabin</h4>"
+#define MNP_TITLE "MOOD'n'PARTY LIGHTS"
+#define MNP_HEADER "<h1>MOOD'n'PARTY LIGHTS</h1>" //<h4> Some more text in header </h4>
 #define MNP_ABOUTCONTENT "<h2>&#x1F7E1;&#x1F7E3;&#x1F7E4; MOOD'n'PARTY &#x1F534;&#x1F7E2;&#x1F535;<br> \
   LIGHTS</h2><p>Let's talk about!</p><p>Thank you for using my lovely Mood & Party Lights! &#x1F525 </p> \
   <p>PM Me and Follow Me on IG: @<a rel='nofollow me' href='https://instagram.com/vasylyudin/'>VasylYudin</a></p>"

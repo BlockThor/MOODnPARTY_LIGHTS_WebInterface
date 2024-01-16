@@ -24,12 +24,15 @@ void srv_handle_wifiscan() {
   int n = WiFi.scanNetworks();
   if (n > 0) {
     for (int i = 0; i < n; i++) {
-      Page += String(F("\r\n<tr><td>")) + WiFi.SSID(i) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? F(" ") : F(" *")) + F(" (") + WiFi.RSSI(i) + F(")</td></tr>");
+      if(i>0 && WiFi.SSID(i) == WiFi.SSID(i-1)) continue; // if two WiFi are same name ignore
+      Page += String(F("\r\n<tr><td>"))+((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : String(F("&#x1F512")));
+      Page += String(F("</td><td><a name='"))+((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? 'O' : 'L');
+      Page += String("' href='#n' onclick='f(this)'>") + WiFi.SSID(i) + F("</a></td></tr>");    
     }
   } else {
     Page += F("<tr><td>No WLAN found</td></tr>");
   }
-  Page += F("<tr><td><small>(rescan if any missing)</small></td></tr></table>");
+  Page += F("<tr><td></td><td><small>(rescan if any missing)</small></td></tr></table>");
 
   DEBUG2N("Scan done", Page);
   webServer.send(200, "text/plain", Page);
@@ -159,7 +162,8 @@ void srv_handle_index_html() {
   char hexcol[6];
 
   // - - - txt processor - - -
-  stringHTML.replace("{MT}", String(F(MNP_MAINTITLE)));
+  stringHTML.replace("{TT}", String(F(MNP_TITLE)));
+  stringHTML.replace("{HD}", String(F(MNP_HEADER)));
   stringHTML.replace("{FT}", String(F(MNP_FOOTER)));
 
   sprintf(hexcol, "%06x", param.COLOR0);

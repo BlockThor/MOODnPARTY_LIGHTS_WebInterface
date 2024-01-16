@@ -1,5 +1,5 @@
 #define WIFI_AP_TIMEOUT    60000
-#define WIFI_AP_IP         IPAddress(172, 217, 28, 1)
+#define WIFI_AP_IP         IPAddress(1, 2, 3, 4)
 #define WIFI_AP_SUBNET     IPAddress(255, 255, 255, 0)
 //#define WIFI_DNS_PORT      (byte)53
 
@@ -11,7 +11,7 @@ const char *softAP_ssid = WIFI_AP_SSID;
 const char *softAP_pass = WIFI_AP_PASS;
 
 const byte DNS_PORT = 53;
-IPAddress apIP(172, 217, 28, 1);
+IPAddress apIP(1, 2, 3, 4);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
 
