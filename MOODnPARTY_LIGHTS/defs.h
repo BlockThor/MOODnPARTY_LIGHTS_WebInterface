@@ -32,7 +32,8 @@ const uint8_t monoModes[] = {
   FX_MODE_PARTYSKY,
   FX_MODE_DISCO,
   FX_MODE_METEOR,
-  FX_MODE_FLYING_SPIRIT
+  FX_MODE_FLYING_SPIRIT,
+  FX_MODE_PORTAL
 };
 const uint8_t duoModes[] =  {
   FX_MODE_STATIC,
@@ -56,7 +57,8 @@ const uint8_t duoModes[] =  {
   FX_MODE_PARTYSKY,
   FX_MODE_DISCO,
   FX_MODE_METEOR,
-  FX_MODE_FLYING_SPIRIT
+  FX_MODE_FLYING_SPIRIT,
+  FX_MODE_PORTAL
 };
 const uint8_t rgbModes[] =  {
   FX_MODE_STATIC,
@@ -93,7 +95,8 @@ const uint8_t rgbModes[] =  {
   FX_MODE_METEOR,
   FX_MODE_COLORFALL,
   FX_MODE_SPLIT,
-  FX_MODE_FLYING_SPIRIT
+  FX_MODE_FLYING_SPIRIT,
+  FX_MODE_PORTAL
 };
 const uint8_t specModes[] =  {
   FX_MODE_STROBE,
@@ -125,12 +128,13 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 
 // - = No  user adjustment beyond this point = -
 
-#define MNP_LIGHTS_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNP_LIGHTS_VERSION MNP_LIGHTS_VERSION_VAL(0, 1, 0)
-
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 1, 0)
-
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 1, 1)
+/*
+  0.1.0 - first release on GitHub
+  0.1.1 - add mode: Portal (FX_MODE_PORTAL)
+*/
+  
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
 #if DEBUGING
 #define DEBUG(s)     { Serial.print(F(s)); }
