@@ -22,8 +22,9 @@ char index_html[] PROGMEM = R"EOF(
 <button class="tablinks" onclick="openTab(event, 'RGBMode')">RainbowColor</button>
 <button class="tablinks" onclick="openTab(event, 'SpecMode')">SpecModes</button>
 <button class="tablinks" onclick="openTab(event, 'Controls')">Controls</button>
-<button class="tablinks" onclick="openTab(event, 'WiFi')">WiFi</button>
 <button class="tablinks last" onclick="openTab(event, 'About')">About</button>
+<button class="tablinks last" onclick="openTab(event, 'Settings')">Settings</button>
+<button class="tablinks last" onclick="openTab(event, 'WiFi')">WiFi</button>
 <button class="tablinks last" onclick="openTab(event, 'GEM')" id="gem">&#x1F48E</button>
 </div>
 
@@ -34,7 +35,7 @@ char index_html[] PROGMEM = R"EOF(
 <div class='flex-col'>
 <label class='txt' for="color0">Main color:</label>
 <div class="donutbox">
-<canvas id='donut1' width='280' height='280' onclick="onDonut(event, this, '0')" onselectstart="function(){return false;}"></canvas>
+<canvas id='donut1' width='280' height='280' onclick="onDonut(event, this, '0')"></canvas>
 <div id="colorDot0" onclick="clickColor('0')"></div>
 <div id="focus0"></div>
 </div>
@@ -115,65 +116,67 @@ oninput="onColor(event, this.value, '2')"><!--#{C2}-->
 <div class='form'>
 <h4>Lights</h4>
 OFF / ON<span>
-<label><input type="radio" name="of" value='0' onchange="sendVal(event, this)"><span>Off</span></label>
-<label><input type="radio" name="of" value='1' onchange="sendVal(event, this)"><span>On</span></label></span>
-Brightness<span>
-<label><input type="radio" name="br" value='8'   onchange="sendVal(event, this)"><span>Min</span></label>
-<label><input type="radio" name="br" value='32'  onchange="sendVal(event, this)"><span>Less</span></label>
-<label><input type="radio" name="br" value='64'  onchange="sendVal(event, this)"><span>Norm</span></label>
-<label><input type="radio" name="br" value='128' onchange="sendVal(event, this)"><span>More</span></label>
-<label><input type="radio" name="br" value='255' onchange="sendVal(event, this)"><span>Max</span></label></span>
-Display speed<span>
-<label><input type="radio" name="ds" value='4000' onchange="sendVal(event, this)"><span>Slower</span></label>
-<label><input type="radio" name="ds" value='2000' onchange="sendVal(event, this)"><span>Slow  </span></label>
-<label><input type="radio" name="ds" value='1000' onchange="sendVal(event, this)"><span>Norm  </span></label>
-<label><input type="radio" name="ds" value='500' onchange="sendVal(event, this)" ><span>Fast  </span></label>
-<label><input type="radio" name="ds" value='100' onchange="sendVal(event, this)" ><span>Faster</span></label></span>
+<label><input type="radio" name="of" value='0' onchange="sendVal(event, this)"><div>Off</div></label>
+<label><input type="radio" name="of" value='1' onchange="sendVal(event, this)"><div>On</div></label></span>
+Brightness<span>                                                             
+<label><input type="radio" name="br" value='8'   onchange="sendVal(event, this)"><div>Min</div></label>
+<label><input type="radio" name="br" value='32'  onchange="sendVal(event, this)"><div>Less</div></label>
+<label><input type="radio" name="br" value='64'  onchange="sendVal(event, this)"><div>Norm</div></label>
+<label><input type="radio" name="br" value='128' onchange="sendVal(event, this)"><div>More</div></label>
+<label><input type="radio" name="br" value='255' onchange="sendVal(event, this)"><div>Max</div></label></span>
+Display speed<span>                                                          
+<label><input type="radio" name="ds" value='4000' onchange="sendVal(event, this)"><div>Slower</div></label>
+<label><input type="radio" name="ds" value='2000' onchange="sendVal(event, this)"><div>Slow  </div></label>
+<label><input type="radio" name="ds" value='1000' onchange="sendVal(event, this)"><div>Norm  </div></label>
+<label><input type="radio" name="ds" value='500' onchange="sendVal(event, this)" ><div>Fast  </div></label>
+<label><input type="radio" name="ds" value='100' onchange="sendVal(event, this)" ><div>Faster</div></label></span>
+</div></div>                                                                 
+<div class='flex-col'>                                                       
+<div class='form'>                                                           
+<h4>Autoplay</h4>                                                            
+Auto Play: One by One<span>                                                  
+<label><input type="radio" name="ap" value='1' onchange="sendVal(event, this)"><div>All</div></label>
+<label><input type="radio" name="ap" value='2' onchange="sendVal(event, this)"><div>Mono</div></label>
+<label><input type="radio" name="ap" value='3' onchange="sendVal(event, this)"><div>Duo</div></label>
+<label><input type="radio" name="ap" value='4' onchange="sendVal(event, this)"><div>Rainbow</div></label></span>
+Auto Play: Random<span>                                                      
+<label><input type="radio" name="ap" value='5' onchange="sendVal(event, this)"><div>All</div></label>
+<label><input type="radio" name="ap" value='6' onchange="sendVal(event, this)"><div>Mono</div></label>
+<label><input type="radio" name="ap" value='7' onchange="sendVal(event, this)"><div>Duo</div></label>
+<label><input type="radio" name="ap" value='8' onchange="sendVal(event, this)"><div>Rainbow</div></label></span>
+Next mode every <span>                                                       
+<label><input type="radio" name="at" value='60'    onchange="sendVal(event, this)"><div>1min</div></label>
+<label><input type="radio" name="at" value='900'   onchange="sendVal(event, this)"><div>15mins</div></label>
+<label><input type="radio" name="at" value='1800'  onchange="sendVal(event, this)"><div>30mins</div></label>
+<label><input type="radio" name="at" value='3600'  onchange="sendVal(event, this)"><div>1hrs</div></label>
+<label><input type="radio" name="at" value='14400' onchange="sendVal(event, this)"><div>4hrs</div></label></span>
+</div></div>                                                                 
+<div class='flex-col'>                                                       
+<div class='form'>                                                           
+<h4>Additional parameters</h4>                                               
+Direction<span>                                                              
+<label><input type="radio" name="dr" value="r" onchange="sendVal(event, this)"><div>Reversed</div></label>
+<label><input type="radio" name="dr" value="d" onchange="sendVal(event, this)"><div>Direct</div></label></span>
+ELEMENT_SIZE<span>                                                           
+<label><input type="radio" name="sz" value='0' onchange="sendVal(event, this)"><div>Small</div></label>
+<label><input type="radio" name="sz" value='2' onchange="sendVal(event, this)"><div>Med</div></label>
+<label><input type="radio" name="sz" value='4' onchange="sendVal(event, this)"><div>Large</div></label>
+<label><input type="radio" name="sz" value='6' onchange="sendVal(event, this)"><div>XL</div></label></span>
+FADE_RATE<span>                                                              
+<label><input type="radio" name="fd" value= '16' onchange="sendVal(event, this)"><div>Faster</div></label>
+<label><input type="radio" name="fd" value= '48' onchange="sendVal(event, this)"><div>Fast</div></label>
+<label><input type="radio" name="fd" value= '64' onchange="sendVal(event, this)"><div>Med</div></label>
+<label><input type="radio" name="fd" value= '80' onchange="sendVal(event, this)"><div>Slow</div></label>
+<label><input type="radio" name="fd" value= '112' onchange="sendVal(event, this)"><div>Slower</div></label></span>
 </div></div>
-<div class='flex-col'>
-<div class='form'>
-<h4>Autoplay</h4>
-Auto Play: One by One<span>
-<label><input type="radio" name="ap" value='1' onchange="sendVal(event, this)"><span>All</span></label>
-<label><input type="radio" name="ap" value='2' onchange="sendVal(event, this)"><span>Mono</span></label>
-<label><input type="radio" name="ap" value='3' onchange="sendVal(event, this)"><span>Duo</span></label>
-<label><input type="radio" name="ap" value='4' onchange="sendVal(event, this)"><span>Rainbow</span></label></span>
-Auto Play: Random<span>
-<label><input type="radio" name="ap" value='5' onchange="sendVal(event, this)"><span>All</span></label>
-<label><input type="radio" name="ap" value='6' onchange="sendVal(event, this)"><span>Mono</span></label>
-<label><input type="radio" name="ap" value='7' onchange="sendVal(event, this)"><span>Duo</span></label>
-<label><input type="radio" name="ap" value='8' onchange="sendVal(event, this)"><span>Rainbow</span></label></span>
-Next mode every <span>
-<label><input type="radio" name="at" value='60'    onchange="sendVal(event, this)"><span>1min</span></label>
-<label><input type="radio" name="at" value='900'   onchange="sendVal(event, this)"><span>15mins</span></label>
-<label><input type="radio" name="at" value='1800'  onchange="sendVal(event, this)"><span>30mins</span></label>
-<label><input type="radio" name="at" value='3600'  onchange="sendVal(event, this)"><span>1hrs</span></label>
-<label><input type="radio" name="at" value='14400' onchange="sendVal(event, this)"><span>4hrs</span></label></span>
 </div></div>
-<div class='flex-col'>
-<div class='form'>
-<h4>Additional parameters</h4>
-Direction<span>
-<label><input type="radio" name="dr" value="r" onchange="sendVal(event, this)"><span>Reversed</span></label>
-<label><input type="radio" name="dr" value="d" onchange="sendVal(event, this)"><span>Direct</span></label></span>
-ELEMENT_SIZE<span>
-<label><input type="radio" name="sz" value='0' onchange="sendVal(event, this)"><span>Small</span></label>
-<label><input type="radio" name="sz" value='2' onchange="sendVal(event, this)"><span>Med</span></label>
-<label><input type="radio" name="sz" value='4' onchange="sendVal(event, this)"><span>Large</span></label>
-<label><input type="radio" name="sz" value='6' onchange="sendVal(event, this)"><span>XL</span></label></span>
-FADE_RATE<span>
-<label><input type="radio" name="fd" value= '16' onchange="sendVal(event, this)"><span>Faster</span></label>
-<label><input type="radio" name="fd" value= '48' onchange="sendVal(event, this)"><span>Fast</span></label>
-<label><input type="radio" name="fd" value= '64' onchange="sendVal(event, this)"><span>Med</span></label>
-<label><input type="radio" name="fd" value= '80' onchange="sendVal(event, this)"><span>Slow</span></label>
-<label><input type="radio" name="fd" value= '112' onchange="sendVal(event, this)"><span>Slower</span></label></span>
-</div></div>
-</div></div>
+
 <div id="WiFi" class="tabcontent">
 <h4>WiFi Settings</h4>
 <div class='flex-row'>
 <div class='flex-col'>
-<div class="form"><h4>Now you are connected:</h4>{WR}</div>
+<div class="form"><h4>Now you are connected:</h4>{WR}
+</div>
 </div>
 <div class='flex-col'>
 <div class="form"><h4>Scan for available networks:</h4>
@@ -182,23 +185,68 @@ FADE_RATE<span>
 <input type='button' value='Scan/Rescan' onclick="scanWiFi(event)"/>
 </div></div>
 <div class='flex-col'>
-<form class="form" name="wifisave"><h4>Connect to network:</h4><span class="txt-cont"><svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-wifi" viewBox="0 0 16 16">
-  <path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"></path>
-  <path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091l.016-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"></path>
+<form class="form" id="wifisave"><h4>Connect to network:</h4><span class="txt-cont"><svg xmlns="http://www.w3.org/2000/svg" class="svg_icon" viewBox="0 0 16 16">
+<path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"></path>
+<path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091l.016-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"></path>
 </svg>
-<input id="n" type="text" maxlength="32" placeholder="network" name="n"></span>
-
-
-
+<input id="n" name="n" type="text" maxlength="32" placeholder="network"></span>
 <span class="txt-cont" id="p">
-    <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-pass" viewBox="0 0 16 16">
-  <path d="M5.5 5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"></path>
-  <path d="M8 2a2 2 0 0 0 2-2h2.5A1.5 1.5 0 0 1 14 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-13A1.5 1.5 0 0 1 3.5 0H6a2 2 0 0 0 2 2Zm0 1a3.001 3.001 0 0 1-2.83-2H3.5a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5h-1.67A3.001 3.001 0 0 1 8 3Z"></path>
+<svg xmlns="http://www.w3.org/2000/svg" class="svg_icon" viewBox="0 0 16 16">
+<path d="M5.5 5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"></path>
+<path d="M8 2a2 2 0 0 0 2-2h2.5A1.5 1.5 0 0 1 14 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-13A1.5 1.5 0 0 1 3.5 0H6a2 2 0 0 0 2 2Zm0 1a3.001 3.001 0 0 1-2.83-2H3.5a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5h-1.67A3.001 3.001 0 0 1 8 3Z"></path>
 </svg>
-<input id="pw" type="password" maxlength="64" placeholder="password" name="p"></span>
+<input id="p" name="p" type="password" maxlength="64" placeholder="password"></span>
 
 <br><input id="pwbt" type="button" value="Connect/Disconnect" onclick="sendWiFi(event)"></form>
 </div></div></div>
+
+<div id="Settings" class="tabcontent">
+<h4> Settings </h4>
+<div class='flex-row'><div class='flex-col'>
+<form class='form'>
+<h4>Hardware</h4>
+<span class="txt">Number of LEDs
+<input type="number" name="sn" value='{SN}' min='5' max="1024" onchange="sendVal(event, this)">
+</span>
+<span class="txt">Port pin
+<input type="number" name="sp" value='{SP}' min='0' max='16' onchange="sendVal(event, this)">
+</span>
+<span class="txt">Type of LEDs
+<select name="st" onchange="sendVal(event, this)">
+  <option value="6">NEO_RGB</option>
+  <option value="9">NEO_RBG</option>
+  <option value="82" selected>NEO_GRB</option>
+  <option value="161">NEO_GBR</option>
+  <option value="88">NEO_BRG</option>
+  <option value="164">NEO_BGR</option>
+</select>
+</span>
+<button type='reset'>Reset</button>
+<input type='button' name='sb' value='Save' onclick="sendCmd('sst')"/>
+</form></div>
+<div class='flex-col'>
+<form class='form' id="apsave">
+<h4>Self WiFi (SP)</h4>
+<span class="txt-cont"><svg xmlns="http://www.w3.org/2000/svg" class="svg_icon" viewBox="0 0 16 16">
+<path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"></path>
+<path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091l.016-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"></path>
+</svg>
+    <input id="an" name="an" type="text" maxlength="20" placeholder="network"></span>
+<script type="text/javascript">document.getElementById("an").value = "{AN}" </script>
+<span class="txt-cont" id="p">
+<svg xmlns="http://www.w3.org/2000/svg" class="svg_icon" viewBox="0 0 16 16">
+<path d="M5.5 5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"></path>
+<path d="M8 2a2 2 0 0 0 2-2h2.5A1.5 1.5 0 0 1 14 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-13A1.5 1.5 0 0 1 3.5 0H6a2 2 0 0 0 2 2Zm0 1a3.001 3.001 0 0 1-2.83-2H3.5a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5h-1.67A3.001 3.001 0 0 1 8 3Z"></path>
+</svg>
+    <input id="ap" name="ap" type="password" maxlength="20" placeholder="password"></span>
+    <input type='button' value='Save' onclick="sendApWiFi(event)"/>
+</form></div>
+<div class='flex-col'>
+<form class='form'>
+<h4>Restart</h4>
+<input type='button' value='Restart Now' onclick="sendCmd('restart');setTimeout(() => {window.location.reload();}, 1000);"/>
+</form></div>
+</div></div>
 
 <div id="GEM" class="tabcontent">
 <h4> All Modes </h4>

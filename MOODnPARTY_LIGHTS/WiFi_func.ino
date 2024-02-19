@@ -3,12 +3,6 @@
 #define WIFI_AP_SUBNET     IPAddress(255, 255, 255, 0)
 //#define WIFI_DNS_PORT      (byte)53
 
-#define WIFI_AP_SSID "MOODLAMP"
-#define WIFI_AP_PASS  "MOODLAMP"
-#define HOSTNAME "moodlamp"
-
-const char *softAP_ssid = WIFI_AP_SSID;
-const char *softAP_pass = WIFI_AP_PASS;
 
 const byte DNS_PORT = 53;
 IPAddress apIP(1, 2, 3, 4);
@@ -23,6 +17,7 @@ void runWiFi() {
     case   STATE_RUNNING_AP:     runningAP();    break;
     case   STATE_RUNNING_AP_STA: runningAPSTA(); break;
     case   STATE_RUNNING_STA:    runningSTA(); break;
+    case   STATE_RESET:          ESP.reset(); break;
     default: enterError();   break;
   }
 }
@@ -33,7 +28,7 @@ bool startAP() {
   WiFi.mode(WIFI_AP);
 
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP(softAP_ssid, softAP_pass);
+  WiFi.softAP(wifidata.wifiSSID_Ap, wifidata.wifiPass_Ap);
   Delay(250);
 
   dnsServer.setTTL(0);
@@ -48,7 +43,7 @@ bool startAP() {
 bool startAPSTA() {
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP(softAP_ssid, softAP_pass);
+  WiFi.softAP(wifidata.wifiSSID_Ap, wifidata.wifiPass_Ap);
 
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "*", apIP);
@@ -120,10 +115,13 @@ void startServer() {
   webServer.on("/main.js", srv_handle_main_js);
   webServer.on("/style.css", srv_handle_style_css);
   webServer.on("/set", srv_handle_set);
-  webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
-  webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
   webServer.on("/scan", srv_handle_wifiscan);
   webServer.on("/sendWiFi", srv_handle_sendwifi);
+  webServer.on("/sendApWiFi", srv_handle_sendapwifi);
+  webServer.on("/cmd", srv_handle_cmd);
+
+  webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
+  webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
   webServer.onNotFound(srv_handle_not_found);
 
   webServer.begin();
@@ -150,5 +148,5 @@ void checkAPTimeout() {
 void enterError() {
   DEBUGN("-> ERROR <-");
   Delay(1000);
-  ESP.reset();
+  setLampState(STATE_RESET);
 }

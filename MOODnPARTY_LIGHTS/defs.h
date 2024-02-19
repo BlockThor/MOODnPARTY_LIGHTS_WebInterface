@@ -1,5 +1,6 @@
 #define LED_PIN 2 // D4 on 
 #define LED_COUNT 60
+#define LED_TYPE NEO_GRB + NEO_KHZ800
 
 #define MNP_TITLE "MOOD'n'PARTY LIGHTS"
 #define MNP_HEADER "<h1>MOOD'n'PARTY LIGHTS</h1>" //<h4> Some more text in header </h4>
@@ -7,6 +8,10 @@
   LIGHTS</h2><p>Let's talk about!</p><p>Thank you for using my lovely Mood & Party Lights! &#x1F525 </p> \
   <p>PM Me and Follow Me on IG: @<a rel='nofollow me' href='https://instagram.com/vasylyudin/'>VasylYudin</a></p>"
 #define MNP_FOOTER "Vasyl Yudin 2023-2024"
+
+#define WIFI_AP_SSID "MOODLAMP"  // default AP WiFi Name
+#define WIFI_AP_PASS  "MOODLAMP" // default AP WiFi Password
+#define HOSTNAME "moodlamp2"
 
 #if defined(WS2812FX_MNP_EDITION_h)
 const uint8_t monoModes[] = {
@@ -129,12 +134,15 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 1, 1)
-/*
-  0.1.0 - first release on GitHub
-  0.1.1 - add mode: Portal (FX_MODE_PORTAL)
-*/
-  
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 2, 0)
+
+/* 
+ *    0.1.0 - first release on GitHub
+ *    0.1.1 - add mode: Portal (FX_MODE_PORTAL)
+ *    0.2.0 - add tab 'Settings'
+ *  
+ */
+
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
 #if DEBUGING
 #define DEBUG(s)     { Serial.print(F(s)); }
@@ -167,6 +175,8 @@ enum State {
 struct WiFiData {
   char wifiSSID[34];
   char wifiPass[64];
+  char wifiSSID_Ap[20];
+  char wifiPass_Ap[20];
 } wifidata;
 
 typedef enum {
@@ -193,6 +203,9 @@ struct LampParameters {
   uint8_t   BRI;
   uint8_t   PLAYMODE;
   uint16_t  PLAYTIME;
+  uint8_t   LEDPIN;
+  uint16_t  LEDCOUNT;
+  uint8_t   LEDTYPE;
   uint8_t   FLAGS;
 } param;
 

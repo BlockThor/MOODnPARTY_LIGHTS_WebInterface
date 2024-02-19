@@ -44,7 +44,7 @@ No special software required. The lights to be controlled through web browser on
 
 ## ToDo
 
-- [ ] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
+- [x] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
 - [ ] Light / Dark color schemes.
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
 - [ ] Presets (samething like Halloween, Circus Combustus, etc)

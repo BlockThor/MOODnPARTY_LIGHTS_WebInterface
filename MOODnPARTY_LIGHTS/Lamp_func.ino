@@ -11,6 +11,9 @@ const LampParameters paramsDefault = {
   128,            // med bri
   5,              // play mode: random all
   60,             // play time: 1 min
+  LED_PIN,        // LED Pin
+  LED_COUNT,      // LED Count
+  LED_TYPE,       // LED Type
   0               // additional flags
 };
 

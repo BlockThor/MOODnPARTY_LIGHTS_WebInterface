@@ -17,9 +17,11 @@ void setup() {
   EEPROM.begin(512);
   delay(100);
 
+
   //  -= = = = = =  SETUP LAMP  = = = = = =-
   DEBUGN("WS2812FX setup");
   lamp.init();
+//  initParameters(); // uncomment for manual init all parameters during development
   loadParameters();
 
   if (param.MAGIC ==  ESP.getChipId()) { // First start, need init ?
