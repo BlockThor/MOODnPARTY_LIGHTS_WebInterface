@@ -91,6 +91,7 @@ body, .txt{
   }
   select{
     display: block;
+    cursor: pointer;
     margin: 3px;
     padding: 0 10px;
     min-height: 32px;
@@ -113,6 +114,7 @@ body, .txt{
   }
   input[type='number'] {
     display: block;
+    cursor: text;
     margin: 3px;
     padding: 0 10px;
     border: 2px solid #404040;

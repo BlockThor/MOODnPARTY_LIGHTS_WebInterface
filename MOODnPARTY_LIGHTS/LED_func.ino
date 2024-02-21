@@ -3,7 +3,7 @@ uint32_t storeColors[3];// = {BLUE, BLACK, RED};
 
 void applyParameters() {
   lamp.setPin(param.LEDPIN);
-  lamp.updateLength(param.LEDCOUNT);
+  lamp.setLength(param.LEDCOUNT);
   lamp.updateType(param.LEDTYPE);
   lamp.setMode(param.MODE);//FX_MODE_STATIC
   setColorMode(param.COLORMODE);

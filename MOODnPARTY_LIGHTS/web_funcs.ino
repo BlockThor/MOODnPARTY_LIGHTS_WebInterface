@@ -55,7 +55,7 @@ void srv_handle_wifiscan() {
 }
 void srv_handle_cmd() {
   String sName = webServer.argName(0);
-  if (sName == "sst") {  // reset all parameters to default
+  if (sName == "sst") {  // save settings
     param.LEDCOUNT = lamp.getLength();
     param.LEDPIN = lamp.getPin();
     //      param.LEDTYPE = p;
@@ -422,7 +422,7 @@ void srv_handle_set() {
     }
     if (sName == "st") {
       uint16_t p = (uint16_t)sArg.toInt();
-      param.LEDTYPE = p;
+      //      param.LEDTYPE = p;
       lamp.updateType(p);
       DEBUG2N("LEDTYPE:", p);
     }

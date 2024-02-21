@@ -134,13 +134,13 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 2, 0)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 2, 1)
 
 /* 
  *    0.1.0 - first release on GitHub
  *    0.1.1 - add mode: Portal (FX_MODE_PORTAL)
  *    0.2.0 - add tab 'Settings'
- *  
+ *    0.2.1 - minor bug fix - tab 'Settings'
  */
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
