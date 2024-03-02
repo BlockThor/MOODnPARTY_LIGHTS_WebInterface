@@ -19,7 +19,7 @@ const LampParameters paramsDefault = {
 
 
 
-void runLEDs(){
+void runLEDs() {
   checkAutoPlay();
   lamp.service();
 }
@@ -45,9 +45,13 @@ const char * const LAMP_STATE[] PROGMEM
   "STATE_ERROR"
 };
 
-String getLampStateString(State s){
-  if(s <= 7) return LAMP_STATE[s];
+String getLampStateString(State s) {
+#ifdef DEBUGING
+  if (s <= 7) return LAMP_STATE[s];
   return LAMP_STATE[STATE_MAX_VALUE];
+#else
+  (void)(s);
+#endif
 }
 
 // - - - - - - D E L A Y - - - - - -
@@ -58,6 +62,9 @@ boolean Delay(int interval) {
   do {
     currMillis = millis();
     runLEDs();
+    if (lampState == STATE_START_AP_STA ||  lampState == STATE_RUNNING_AP ||  lampState ==  STATE_RUNNING_AP_STA) {
+      runningAP();
+    }
     yield();
   } while (currMillis - prevMillis < interval);
   return false;

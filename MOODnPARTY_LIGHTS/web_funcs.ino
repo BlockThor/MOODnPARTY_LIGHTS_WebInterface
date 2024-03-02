@@ -1,14 +1,19 @@
-/* #####################################################
-  #  Webserver Functions
-  ##################################################### */
+//  -= = = = = =  Webserver Functions  = = = = = =-
+
+// - - - - - - SRV HANDLE - - - - - -
 
 void srv_handle_sendwifi() {
-  DEBUG("Handle WiFi\n");
+  DEBUG("Handle WiFi: ");
+  DEBUG2N("Counted args:", webServer.args());
+
   for (uint8_t i = 0; i < webServer.args(); i++) {
     DEBUG2("Arg: ", webServer.argName(i)); DEBUG2N("\t= ", webServer.arg(i));
     webServer.arg("n").toCharArray(wifidata.wifiSSID, sizeof(wifidata.wifiSSID) - 1);
     webServer.arg("p").toCharArray(wifidata.wifiPass, sizeof(wifidata.wifiPass) - 1);
   }
+  webServer.send(200, "text/plain", "Ok");
+  //  webServer.client().stop(); // Stop is needed because we sent no content length
+
   saveCredentials();
   loadCredentials();
   if (String(wifidata.wifiSSID) == "") {
@@ -25,6 +30,8 @@ void srv_handle_sendapwifi() {
     webServer.arg("an").toCharArray(wifidata.wifiSSID_Ap, sizeof(wifidata.wifiSSID) - 1);
     webServer.arg("ap").toCharArray(wifidata.wifiPass_Ap, sizeof(wifidata.wifiPass) - 1);
   }
+  webServer.send(200, "text/plain", "Ok");
+  //  webServer.client().stop(); // Stop is needed because we sent no content length
 
   if (String(wifidata.wifiSSID_Ap) == "") { // AP WiFi name can't be empty - set default
     String(WIFI_AP_SSID).toCharArray(wifidata.wifiSSID_Ap, 20);
@@ -34,25 +41,35 @@ void srv_handle_sendapwifi() {
   loadCredentials();
 }
 void srv_handle_wifiscan() {
+  int8_t scanResult = 0;
   String Page;
   Page = String(F("<table>"));
   DEBUGN("Scan start");
-  int n = WiFi.scanNetworks();
-  if (n > 0) {
-    for (int i = 0; i < n; i++) {
+  WiFi.scanNetworks(true);
+  unsigned long startTimer = millis();
+  while (scanResult <= 0 && millis() - startTimer < TTC) {
+    scanResult = WiFi.scanComplete();
+    Delay(100);
+    DEBUG(".");
+  }
+  DEBUG("\n");
+
+  if (scanResult > 0) {
+    for (int i = 0; i < scanResult; i++) {
       if (i > 0 && WiFi.SSID(i) == WiFi.SSID(i - 1)) continue; // if two WiFi are same name ignore
       Page += String(F("\r\n<tr><td>")) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : String(F("&#x1F512")));
       Page += String(F("</td><td><a name='")) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? 'O' : 'L');
       Page += String("' href='#n' onclick='f(this)'>") + WiFi.SSID(i) + F("</a></td></tr>");
     }
   } else {
-    Page += F("<tr><td>No WLAN found</td></tr>");
+    Page += F("\r\n<tr><td></td> <td>No WiFi found</td></tr>");
   }
   Page += F("<tr><td></td><td><small>(rescan if any missing)</small></td></tr></table>");
 
-  DEBUG2N("Scan done", Page);
+  DEBUG2N("Scan done: ", scanResult);
   webServer.send(200, "text/plain", Page);
 }
+
 void srv_handle_cmd() {
   String sName = webServer.argName(0);
   if (sName == "sst") {  // save settings
@@ -69,117 +86,9 @@ void srv_handle_cmd() {
   if (sName == "restart") {  // reset all parameters to default
     DEBUGN("Restart");
     setLampState(STATE_RESET);
-//    ESP.reset();
+    //    ESP.reset();
   }
 }
-
-//
-String wifiInfo_Page_setup() {
-  String page;
-
-  if (webServer.client().localIP() == WIFI_AP_IP) {
-    page += String(F("<p>through the soft AP:<br/>")) + wifidata.wifiSSID_Ap + F("</p>");
-  } else {
-    page += String(F("<p>through the wifi network:<br/>")) + wifidata.wifiSSID + F("</p>\r\n<br/>");
-  }
-
-  if (lampState != STATE_RUNNING_STA) {
-    page += String(F("<table><tr><th>SoftAP config</th></tr><tr><td><i>SSID</i> ")) +
-            String(wifidata.wifiSSID_Ap) +
-            F("</td></tr><tr><td><i>IP</i> ") +
-            WiFi.softAPIP().toString() +
-            F("</td></tr></table>\r\n<br />");
-  }
-
-  page += String(F("<table><tr><th>WLAN config</th></tr><tr><td>SSID ")) +
-          String(wifidata.wifiSSID) +
-          F("</td></tr><tr><td>IP ") +
-          WiFi.localIP().toString() +
-          F("</td></tr></table>");
-
-  return page;
-}
-
-
-String allModes_Page_setup() {
-  String page;
-  uint8_t num_modes = lamp.getModeCount();
-  for (uint8_t i = 0; i < num_modes - MAX_CUSTOM_MODES; i++) {
-    page += "\n<li>";
-    page += lamp.getModeName(i);
-    page += "</li>";
-  }
-  return page;
-}
-String monoModes_Page_setup() {
-  String page;
-  uint8_t num_modes = sizeof(monoModes);
-  for (uint8_t i = 0; i < num_modes; i++) {
-    page += "\n<li>";
-    page += lamp.getModeName(monoModes[i]);
-    page += "</li>";
-  }
-  return page;
-}
-String duoModes_Page_setup() {
-  String page;
-  uint8_t num_modes = sizeof(duoModes);
-  for (uint8_t i = 0; i < num_modes; i++) {
-    page += "\n<li>";
-    page += lamp.getModeName(duoModes[i]);
-    page += "</li>";
-  }
-  return page;
-}
-String rgbModes_Page_setup() {
-  String page;
-  uint8_t num_modes = sizeof(rgbModes);
-  for (uint8_t i = 0; i < num_modes; i++) {
-    page += "\n<li>";
-    page += lamp.getModeName(rgbModes[i]);
-    page += "</li>";
-  }
-  return page;
-}
-String specModes_Page_setup() {
-  String page;
-  uint8_t num_modes = sizeof(specModes);
-  for (uint8_t i = 0; i < num_modes; i++) {
-    page += "\n<li>";
-    page += lamp.getModeName(specModes[i]);
-    page += "</li>";
-  }
-  return page;
-}
-
-String param_Page_setup() {
-  //{'of':1, 'br':64, 'ds':1000, 'ap':0, 'pt':60, 'dr':'r', 'sz':6, 'fd':48 }
-  String page;
-  page +=  "{of:";
-  page +=  lamp.isRunning() ? "1" : "0";
-  page += ", br:" + String(param.BRI);
-  page += ", ds:" + String(param.SPEED);
-  page += ", ap:" + String(param.PLAYMODE);
-  page += ", at:" + String(param.PLAYTIME);
-  page += ", dr:" + String((((param.OPTION & REVERSE) == REVERSE) ? "'r'" : "'d'"));
-  page += ", sz:" + String(param.OPTION & SIZE_XLARGE);
-  page += ", fd:" + String(param.OPTION & FADE_GLACIAL);
-  page += "}";
-  return page;
-}
-
-String about_Page_setup() {
-  String page;
-  //  page += String(F("<p> Let's talk about!</p><p>Thank for using my lovely MoodLineLamp!</p><p>Thank for using my lovely MoodLineLamp!</p>"));
-  page = String(F(MNP_ABOUTCONTENT));
-
-#if !defined(WS2812FX_MNP_EDITION_h)
-  page += String(F("<p>!!! Designed for WS2812FX_MNP_EDITION lib !!!</p><p>Please download <a href='https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition'>Mood&Party Lights WS2812FX Lib</a></p>"));
-#endif
-
-  return page;
-}
-
 void srv_handle_not_found() {
   if (captivePortal()) { // If caprive portal redirect instead of displaying the error page.
     return;
@@ -210,7 +119,6 @@ void srv_handle_index_html() {
 
   page = param_Page_setup();
   stringHTML.replace("{PM}", page);
-
 
   page = allModes_Page_setup();
   stringHTML.replace("{M0}", page);
@@ -422,19 +330,123 @@ void srv_handle_set() {
     }
     if (sName == "st") {
       uint16_t p = (uint16_t)sArg.toInt();
-      //      param.LEDTYPE = p;
+      param.LEDTYPE = p;
       lamp.updateType(p);
       DEBUG2N("LEDTYPE:", p);
     }
     if (sName == "sb") {
-      DEBUG("SET BUTTON RESSED!");
+      DEBUG("SET BUTTON RESET!");
     }
   }
   param.OPTION = lamp.getOptions(0);
   saveParameters();
-  webServer.send(200, "text/plain", "");
-  //  webServer.client().stop(); // Stop is needed because we sent no content length
+  webServer.send(200, "text/plain", "Ok");
+  webServer.client().stop(); // Stop is needed because we sent no content length
   //SOME WHERE HERE MOST PROBABLY SHOULD BE THE REASON FOR FREEZE WIFI MODULE AFTER SEVERAL CALLS
+}
+
+
+// - - - - - - PAGE SETUPS - - - - - -
+
+String wifiInfo_Page_setup() {
+  String page;
+  if (webServer.client().localIP() == WIFI_AP_IP) {
+    page += String(F("<p>through the soft AP:<br/>")) + wifidata.wifiSSID_Ap + F("</p>");
+  } else {
+    page += String(F("<p>through the wifi network:<br/>")) + wifidata.wifiSSID + F("</p>\r\n<br/>");
+  }
+  if (lampState != STATE_RUNNING_STA) {
+    page += String(F("<table><tr><th>SoftAP config</th></tr><tr><td><i>SSID</i> ")) +
+            String(wifidata.wifiSSID_Ap) +
+            F("</td></tr><tr><td><i>IP</i> ") +
+            WiFi.softAPIP().toString() +
+            F("</td></tr></table>\r\n<br />");
+  }
+  page += String(F("<table><tr><th>WLAN config</th></tr><tr><td>SSID ")) +
+          String(wifidata.wifiSSID) +
+          F("</td></tr><tr><td>") +
+          ((WiFi.status() != WL_CONNECTED) ? getWiFiStateString(lastWiFiStatus) : F("IP ") + WiFi.localIP().toString()) +
+          F("</td></tr></table>");
+  return page;
+}
+
+String allModes_Page_setup() {
+  String page;
+  uint8_t num_modes = lamp.getModeCount();
+  for (uint8_t i = 0; i < num_modes - MAX_CUSTOM_MODES; i++) {
+    page += "\n<li>";
+    page += lamp.getModeName(i);
+    page += "</li>";
+  }
+  return page;
+}
+String monoModes_Page_setup() {
+  String page;
+  uint8_t num_modes = sizeof(monoModes);
+  for (uint8_t i = 0; i < num_modes; i++) {
+    page += "\n<li>";
+    page += lamp.getModeName(monoModes[i]);
+    page += "</li>";
+  }
+  return page;
+}
+String duoModes_Page_setup() {
+  String page;
+  uint8_t num_modes = sizeof(duoModes);
+  for (uint8_t i = 0; i < num_modes; i++) {
+    page += "\n<li>";
+    page += lamp.getModeName(duoModes[i]);
+    page += "</li>";
+  }
+  return page;
+}
+String rgbModes_Page_setup() {
+  String page;
+  uint8_t num_modes = sizeof(rgbModes);
+  for (uint8_t i = 0; i < num_modes; i++) {
+    page += "\n<li>";
+    page += lamp.getModeName(rgbModes[i]);
+    page += "</li>";
+  }
+  return page;
+}
+String specModes_Page_setup() {
+  String page;
+  uint8_t num_modes = sizeof(specModes);
+  for (uint8_t i = 0; i < num_modes; i++) {
+    page += "\n<li>";
+    page += lamp.getModeName(specModes[i]);
+    page += "</li>";
+  }
+  return page;
+}
+
+String param_Page_setup() {
+  //{'of':1, 'br':64, 'ds':1000, 'ap':0, 'pt':60, 'dr':'r', 'sz':6, 'fd':48 }
+  String page;
+  page +=  "{of:";
+  page +=  lamp.isRunning() ? "1" : "0";
+  page += ", br:" + String(param.BRI);
+  page += ", ds:" + String(param.SPEED);
+  page += ", ap:" + String(param.PLAYMODE);
+  page += ", at:" + String(param.PLAYTIME);
+  page += ", dr:" + String((((param.OPTION & REVERSE) == REVERSE) ? "'r'" : "'d'"));
+  page += ", sz:" + String(param.OPTION & SIZE_XLARGE);
+  page += ", fd:" + String(param.OPTION & FADE_GLACIAL);
+  page += "}";
+  return page;
+}
+
+String about_Page_setup() {
+  String page;
+  //  page += String(F("<p> Let's talk about!</p><p>Thank for using my lovely MoodLineLamp!</p><p>Thank for using my lovely MoodLineLamp!</p>"));
+  page = String(F(MNP_ABOUTCONTENT));
+
+#if !defined(WS2812FX_MNP_EDITION_h)
+  page += String(F("<p>!!! Designed for WS2812FX_MNP_EDITION lib !!!</p><p>Please download <a href='https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition'>Mood&Party Lights WS2812FX Lib</a></p>"));
+#endif
+
+  return page;
 }
 
 boolean captivePortal() {

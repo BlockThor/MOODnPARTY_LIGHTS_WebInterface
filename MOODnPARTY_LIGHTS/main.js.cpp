@@ -156,43 +156,38 @@ evt.currentTarget.classList.add('activetab');
 function sendCmd(cmd) {
 let xhttp = new XMLHttpRequest();
 console.log('Send CMD: ', cmd);
-xhttp.open('PUT', 'cmd?' + cmd, true);
-xhttp.send();
+xhttp.open('GET', 'cmd?' + cmd);
+xhttp.send(null);
 }
+
 function sendWiFi() {
 let xhttp = new XMLHttpRequest();
 const formData = new FormData(document.querySelector('#wifisave'));
-
 xhttp.open('PUT', 'sendWiFi', true);
 xhttp.send(formData);
-setTimeout(() => {
-    window.location.reload(true);
-}, 3000);
+setTimeout(() => {window.location.reload(true);}, 3000);
 }
 
 function sendApWiFi() {
 let xhttp = new XMLHttpRequest();
 const formData = new FormData(document.querySelector('#apsave'));
-
-xhttp.open('PUT', 'sendApWiFi', true);
+xhttp.open('PUT', 'sendApWiFi');
 xhttp.send(formData);
-setTimeout(() => {
-window.location.reload();
-}, 1000);
+setTimeout(() => {window.location.reload();}, 1000);
 }
 
 function submitVal(name, val) {
 let xhttp = new XMLHttpRequest();
-xhttp.open('PUT', 'set?' + name + '=' + val, true);
-xhttp.send();
+xhttp.open('GET', 'set?' + name + '=' + val);
+xhttp.send(null);
 }
 
 function sendVal(event, item) {
 event.preventDefault();
 console.log("send: ", item.name + '=' + item.value);
 let xhttp = new XMLHttpRequest();
-xhttp.open('PUT', 'set?' + item.name + '=' + item.value, true);
-xhttp.send();
+xhttp.open('GET', 'set?' + item.name + '=' + item.value);
+xhttp.send(null);
 }
 
 function scanWiFi(event) {
@@ -209,18 +204,18 @@ console.log(xhttp.readyState);
 console.log(xhttp.status);
 }
 };
-xhttp.open('GET', 'scan', true);
-xhttp.send();
+xhttp.open('GET', 'scan');
+xhttp.send(null);
 }
 
 function f(link){
 document.getElementById('n').value = link.innerText || link.textContent;
 if(link.name == 'O'){
-document.getElementById('p').style.display = "none"; 
+document.getElementById('pf').style.display = "none"; 
 document.getElementById('pwbt').focus();
 } else {
-document.getElementById('p').style.display = "";
-document.getElementById('pw').focus();
+document.getElementById('pf').style.display = "";
+
 }
 }
 function gem() {

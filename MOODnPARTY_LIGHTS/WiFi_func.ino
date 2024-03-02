@@ -8,6 +8,7 @@ const byte DNS_PORT = 53;
 IPAddress apIP(1, 2, 3, 4);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
+uint8_t lastWiFiStatus;
 
 void runWiFi() {
   switch (lampState) {
@@ -45,8 +46,11 @@ bool startAPSTA() {
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(wifidata.wifiSSID_Ap, wifidata.wifiPass_Ap);
 
-  dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+  dnsServer.setTTL(0);
   dnsServer.start(DNS_PORT, "*", apIP);
+  dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+  startServer();
+  
   if (connectWiFi()) startServer();
   else return false;
 
@@ -89,21 +93,35 @@ bool connectWiFi() {
   if (WiFi.begin(wifidata.wifiSSID, wifidata.wifiPass)) {
     DEBUGN("WiFi.begin");
     unsigned long startTimer = millis();
-    while (WiFi.status() != WL_CONNECTED && millis() - startTimer < 120000) {
+    while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_WRONG_PASSWORD && millis() - startTimer < TTC) {
       Delay(500);
       DEBUG("|");
     }
+    DEBUGVN(getWiFiStateString(WiFi.status()));
     // Check connection
     if (WiFi.status() == WL_CONNECTED) {
       DEBUG2N(" Connected: ", WiFi.localIP());
+      lastWiFiStatus = WL_CONNECTED;
       return true;
+    } else if (WiFi.status() == WL_NO_SSID_AVAIL) {
+      DEBUG2N("\nWiFi.NotFound: ", wifidata.wifiSSID);
+      lastWiFiStatus = WL_NO_SSID_AVAIL;
+      setLampState(STATE_START_AP_ONLY);
+      return false;
+    } else if (WiFi.status() == WL_WRONG_PASSWORD) {
+      DEBUG2N("\nWiFi.WrongPass: ", wifidata.wifiPass);
+      lastWiFiStatus = WL_WRONG_PASSWORD;
+      setLampState(STATE_START_AP_ONLY);
+      return false;
     } else {
-      DEBUG2N("WiFi.NotConnected: ", WiFi.status());
-      setLampState(STATE_ERROR);
+      DEBUG2N("\nWiFi.NotConnected: ", WiFi.status());
+      lastWiFiStatus = WiFi.status();
+      //      setLampState(STATE_ERROR);
       return false;
     }
   } else {
     DEBUG2N("WiFi.NotBegin: ", WiFi.status());
+    DEBUGVN(getWiFiStateString(WiFi.status()));
     setLampState(STATE_RUNNING_AP);
     return false;
   }
@@ -149,4 +167,27 @@ void enterError() {
   DEBUGN("-> ERROR <-");
   Delay(1000);
   setLampState(STATE_RESET);
+}
+
+const char * const WIFI_STATE[] PROGMEM
+{
+  "IDLE_STATUS",
+  "NO_SSID_AVAIL",
+  "SCAN_COMPLETED",
+  "CONNECTED",
+  "CONNECT_FAILED",
+  "CONNECTION_LOST",
+  "WRONG_PASSWORD",
+  "DISCONNECTED",
+  "FAILED",
+};
+
+String getWiFiStateString(uint8_t s) {
+#ifdef DEBUGING
+  if (s <= 7) return WIFI_STATE[s];
+  return WIFI_STATE[8];
+#else
+  // Suppress warning unused variable
+  (void)(s);
+#endif
 }

@@ -12,6 +12,7 @@
 #define WIFI_AP_SSID "MOODLAMP"  // default AP WiFi Name
 #define WIFI_AP_PASS  "MOODLAMP" // default AP WiFi Password
 #define HOSTNAME "moodlamp2"
+#define TTC 60000 // Time_To_Connect to WiFi
 
 #if defined(WS2812FX_MNP_EDITION_h)
 const uint8_t monoModes[] = {
@@ -134,13 +135,15 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 2, 1)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 3, 0)
 
 /* 
  *    0.1.0 - first release on GitHub
  *    0.1.1 - add mode: Portal (FX_MODE_PORTAL)
  *    0.2.0 - add tab 'Settings'
  *    0.2.1 - minor bug fix - tab 'Settings'
+ *    0.3.0 - if wrong WiFi name or password - it display on WiFi tab
+ *            WiFi scan now async without frizing LEDs
  */
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
@@ -150,6 +153,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 #define DEBUG2X(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
 #define DEBUGN(s)     { Serial.println(F(s)); }
 #define DEBUG2N(s,v)  { Serial.print(F(s)); Serial.println(v); }
+#define DEBUGVN(v)    {Serial.println(v); }
 #define DEBUG2XN(s,v) { Serial.print(F(s)); Serial.println(v, HEX); }
 #else
 #define DEBUG(s)
