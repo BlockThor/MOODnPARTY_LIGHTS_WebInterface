@@ -187,7 +187,6 @@ String getWiFiStateString(uint8_t s) {
   if (s <= 7) return WIFI_STATE[s];
   return WIFI_STATE[8];
 #else
-  // Suppress warning unused variable
   (void)(s);
 #endif
 }

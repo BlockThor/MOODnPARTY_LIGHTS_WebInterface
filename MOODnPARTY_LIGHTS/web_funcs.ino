@@ -43,17 +43,17 @@ void srv_handle_sendapwifi() {
 void srv_handle_wifiscan() {
   int8_t scanResult = 0;
   String Page;
-  Page = String(F("<table>"));
   DEBUGN("Scan start");
   WiFi.scanNetworks(true);
   unsigned long startTimer = millis();
-  while (scanResult <= 0 && millis() - startTimer < TTC) {
+  while (scanResult = 0 && millis() - startTimer < TTC) {
     scanResult = WiFi.scanComplete();
     Delay(100);
     DEBUG(".");
   }
   DEBUG("\n");
 
+  Page = String(F("<table>"));
   if (scanResult > 0) {
     for (int i = 0; i < scanResult; i++) {
       if (i > 0 && WiFi.SSID(i) == WiFi.SSID(i - 1)) continue; // if two WiFi are same name ignore
@@ -88,6 +88,7 @@ void srv_handle_cmd() {
     setLampState(STATE_RESET);
     //    ESP.reset();
   }
+  webServer.send(200, "text/plain", "Ok");
 }
 void srv_handle_not_found() {
   if (captivePortal()) { // If caprive portal redirect instead of displaying the error page.

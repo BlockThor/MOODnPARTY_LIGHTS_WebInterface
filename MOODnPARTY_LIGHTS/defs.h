@@ -102,7 +102,8 @@ const uint8_t rgbModes[] =  {
   FX_MODE_COLORFALL,
   FX_MODE_SPLIT,
   FX_MODE_FLYING_SPIRIT,
-  FX_MODE_PORTAL
+  FX_MODE_PORTAL,
+  FX_MODE_ROCKING
 };
 const uint8_t specModes[] =  {
   FX_MODE_STROBE,
@@ -144,6 +145,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *    0.2.1 - minor bug fix - tab 'Settings'
  *    0.3.0 - if wrong WiFi name or password - it display on WiFi tab
  *            WiFi scan now async without frizing LEDs
+ *    0.4.0 - add mode: Rocking (FX_MODE_ROCKING)
  */
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
