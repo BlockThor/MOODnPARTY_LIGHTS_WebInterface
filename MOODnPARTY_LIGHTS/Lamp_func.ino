@@ -24,7 +24,7 @@ void runLEDs() {
   lamp.service();
 }
 
-// - - - - - - Lamp State - - - - - - 
+// - - - - - - Lamp State - - - - - -
 void setLampState(State s) {
   lampState = s;
   DEBUG2N("Status set:", getLampStateString(s));

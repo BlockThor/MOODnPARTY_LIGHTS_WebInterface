@@ -77,7 +77,7 @@ _ctx.fillRect(0, 0, xc * 2, yc * 2);
 }
 
 function initAllMode(mode, index) {
-mode.addEventListener('click', (event) => onMode(event, index, 'nm'));
+mode.addEventListener('click', (event) => onMode(event, index, 'mn'));
 }
 
 function initMonoMode(mode, index) {
@@ -212,7 +212,7 @@ function f(link){
 document.getElementById('n').value = link.innerText || link.textContent;
 if(link.name == 'O'){
 document.getElementById('pf').style.display = "none"; 
-document.getElementById('pwbt').focus();
+//document.getElementById('pwbt').focus();
 } else {
 document.getElementById('pf').style.display = "";
 

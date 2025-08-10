@@ -174,6 +174,7 @@ void srv_handle_set() {
     if (sName == "rst") {  // reset all parameters to default
       initParameters();
     }
+    delay(0);
     if (sName == "c0") {
       uint32_t rcvdColor = sArg.toInt();
       if (rcvdColor <= 0xFFFFFF) {
@@ -181,23 +182,21 @@ void srv_handle_set() {
         applyColors();
         //        DEBUG2XN(" R:",rcvdColor>>16 & 0xFF);DEBUG2XN(" G:",rcvdColor>>8 & 0xFF);DEBUG2XN(" B:",rcvdColor & 0xFF);
       }
-    }
-    if (sName == "c1") {
+    } else if (sName == "c1") {
       uint32_t rcvdColor = sArg.toInt();
       if (rcvdColor <= 0xFFFFFF) {
         param.COLOR1 = rcvdColor;
         applyColors();
       }
-    }
-    if (sName == "c2") {
+    } else if (sName == "c2") {
       uint32_t rcvdColor = sArg.toInt();
       if (rcvdColor <= 0xFFFFFF) {
         param.COLOR2 = rcvdColor;
         applyColors();
       }
     }
-
-    if (sName == "nm") {
+    delay(0);
+    if (sName == "mn") {
       uint8_t tmp = (uint8_t)sArg.toInt();
       lamp.setMode(tmp);
       setColorMode(COLORMODE_DUO);
@@ -205,8 +204,7 @@ void srv_handle_set() {
       param.COLORMODE = COLORMODE_DUO;
       param.PLAYMODE = P_NONE;
       DEBUG2N("normMode is ", lamp.getModeName(lamp.getMode()));
-    }
-    if (sName == "mm") {
+    } else if (sName == "mm") {
       uint8_t tmp = (uint8_t)sArg.toInt();
       lamp.setMode(monoModes[tmp]);
       setColorMode(COLORMODE_MONO);
@@ -214,8 +212,7 @@ void srv_handle_set() {
       param.COLORMODE = COLORMODE_MONO;
       param.PLAYMODE = P_NONE;
       DEBUG2N("monoModes is ", lamp.getModeName(lamp.getMode()));
-    }
-    if (sName == "md") {
+    } else if (sName == "md") {
       uint8_t tmp = (uint8_t)sArg.toInt();
       lamp.setMode(duoModes[tmp]);
       setColorMode(COLORMODE_DUO);
@@ -223,8 +220,7 @@ void srv_handle_set() {
       param.COLORMODE = COLORMODE_DUO;
       param.PLAYMODE = P_NONE;
       DEBUG2N("duoModes is ", lamp.getModeName(lamp.getMode()));
-    }
-    if (sName == "mr") {
+    } else if (sName == "mr") {
       uint8_t tmp = (uint8_t)sArg.toInt();
       lamp.setMode(rgbModes[tmp]);
       setColorMode(COLORMODE_RGB);
@@ -232,8 +228,7 @@ void srv_handle_set() {
       param.COLORMODE = COLORMODE_RGB;
       param.PLAYMODE = P_NONE;
       DEBUG2N("rgbModes is ", lamp.getModeName(lamp.getMode()));
-    }
-    if (sName == "ms") {
+    } else if (sName == "ms") {
       uint8_t tmp = (uint8_t)sArg.toInt();
       lamp.setMode(specModes[tmp]);
       setColorMode(COLORMODE_DUO);
@@ -242,6 +237,7 @@ void srv_handle_set() {
       param.PLAYMODE = P_NONE;
       DEBUG2N("specModes is ", lamp.getModeName(lamp.getMode()));
     }
+    delay(0);
 
     if (sName == "of") {
       if (webServer.arg(i)[0] == '0') {
@@ -249,8 +245,7 @@ void srv_handle_set() {
       } else {
         lamp.start(); //      lamp.resume();
       }
-    }
-    if (sName == "br") { // brightness
+    } else if (sName == "br") { // brightness
       if (webServer.arg(i)[0] == '-') {
         lamp.setBrightness(lamp.getBrightness() * 0.8);
       } else if (webServer.arg(i)[0] == ' ') {
@@ -261,9 +256,7 @@ void srv_handle_set() {
       }
       param.BRI = lamp.getBrightness();
       //      DEBUG2N("brightness is ", lamp.getBrightness());
-    }
-
-    if (sName == "ds") { //speed
+    } else if (sName == "ds") { //speed
       if (webServer.arg(i)[0] == '-') {
         lamp.setSpeed(max(lamp.getSpeed(), 5) * 1.2);
       } else if (webServer.arg(i)[0] == ' ') {
@@ -275,20 +268,19 @@ void srv_handle_set() {
       param.SPEED = lamp.getSpeed();
       //      DEBUG2N("speed is ", lamp.getSpeed());
     }
+    delay(0);
+
     if (sName == "ap") { // playmode - autoplay
       uint16_t p = (uint16_t)sArg.toInt();
       param.PLAYMODE = p;
       //      DEBUG2N("playMode:", param.PLAYMODE);
       auto_last_change = 0;
-    }
-    if (sName == "at") { // playtime - autotime
+    } else if (sName == "at") { // playtime - autotime
       uint16_t p = (uint16_t)sArg.toInt();
       param.PLAYTIME = p;
       //      DEBUG2N("playTime:", param.PLAYTIME);
       auto_last_change = 0;
-    }
-
-    if (sName == "dr") { // direct / reverse
+    } else if (sName == "dr") { // direct / reverse
       uint8_t opts = lamp.getOptions(0);
       if (webServer.arg(i)[0] == 'r') {
         lamp.setOptions(0, opts | REVERSE);
@@ -296,16 +288,14 @@ void srv_handle_set() {
         lamp.setOptions(0, opts & ~REVERSE);
       }
       //      DEBUG2BN("Options:", lamp.getOptions(0));
-    }
-    if (sName == "sz") { // size
+    } else if (sName == "sz") { // size
       uint8_t opts = lamp.getOptions(0);
       uint16_t p = (uint16_t)sArg.toInt();
       opts &= ~SIZE_XLARGE;
       opts |= p;
       lamp.setOptions(0, opts);
       lamp.resetSegmentRuntime(0);
-    }
-    if (sName == "fd") {
+    } else if (sName == "fd") {
       uint8_t opts = lamp.getOptions(0);
       uint16_t p = (uint16_t)sArg.toInt();
       opts &= ~FADE_GLACIAL;
@@ -314,6 +304,7 @@ void srv_handle_set() {
       //      DEBUG2BN("Options:", lamp.getOptions(0));
       //      DEBUG2N("Rate set to:", lamp.getOptions(0)));
     }
+    delay(0);
 
     // LED HARDWARE
     if (sName == "sn") {
@@ -322,23 +313,22 @@ void srv_handle_set() {
       lamp.fill(0, 0, lamp.getLength());
       lamp.setLength(p);
       DEBUG2N("LEDCOUNT:", p);
-    }
-    if (sName == "sp") {
+    } else if (sName == "sp") {
       uint16_t p = (uint16_t)sArg.toInt();
       //      param.LEDPIN = p;
       lamp.setPin(p);
       DEBUG2N("LEDPIN:", p);
-    }
-    if (sName == "st") {
+    } else if (sName == "st") {
       uint16_t p = (uint16_t)sArg.toInt();
       param.LEDTYPE = p;
       lamp.updateType(p);
       DEBUG2N("LEDTYPE:", p);
-    }
-    if (sName == "sb") {
+    } else if (sName == "sb") {
       DEBUG("SET BUTTON RESET!");
     }
+    delay(0);
   }
+  delay(0);
   param.OPTION = lamp.getOptions(0);
   saveParameters();
   webServer.send(200, "text/plain", "Ok");

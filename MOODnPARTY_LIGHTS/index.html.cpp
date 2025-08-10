@@ -105,7 +105,7 @@ oninput="onColor(event, this.value, '2')"><!--#{C2}-->
 <h4>Very Special Modes</h4>
 <div class='flex-row'><div class='flex-col'>
 <ul class='flex-row-wrap'>
-<li onClick="onMode(event,'59','nm')">From &#x1F499;&#x1F49B; with Love</li>
+<li onClick="onMode(event,'59','mn')">From &#x1F499;&#x1F49B; with Love</li>
 </ul>
 </div></div>
 </div>

@@ -44,6 +44,7 @@ void setup() {
 }
 
 void loop() {
+  delay(0);
   runLEDs();
   runWiFi();
 }

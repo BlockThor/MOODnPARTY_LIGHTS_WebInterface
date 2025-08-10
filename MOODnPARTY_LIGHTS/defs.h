@@ -136,7 +136,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 3, 0)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 4, 1)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -146,12 +146,14 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *    0.3.0 - if wrong WiFi name or password - it display on WiFi tab
  *            WiFi scan now async without frizing LEDs
  *    0.4.0 - add mode: Rocking (FX_MODE_ROCKING)
+ *    0.4.1 - fix bug with freezing WiFi chip
  */
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
 #if DEBUGING
 #define DEBUG(s)     { Serial.print(F(s)); }
 #define DEBUG2(s,v)  { Serial.print(F(s)); Serial.print(v); }
+//#define DEBUGV(v)    { Serial.print(v); }
 #define DEBUG2X(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
 #define DEBUGN(s)     { Serial.println(F(s)); }
 #define DEBUG2N(s,v)  { Serial.print(F(s)); Serial.println(v); }
