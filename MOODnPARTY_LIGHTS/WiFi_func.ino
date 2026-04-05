@@ -137,6 +137,7 @@ void startServer() {
   webServer.on("/sendWiFi", srv_handle_sendwifi);
   webServer.on("/sendApWiFi", srv_handle_sendapwifi);
   webServer.on("/cmd", srv_handle_cmd);
+  webServer.on("/time", srv_handle_time);
 
   webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
   webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
