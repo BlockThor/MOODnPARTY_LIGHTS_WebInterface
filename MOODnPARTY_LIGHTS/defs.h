@@ -136,7 +136,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 4, 1)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 0)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -147,6 +147,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *            WiFi scan now async without frizing LEDs
  *    0.4.0 - add mode: Rocking (FX_MODE_ROCKING)
  *    0.4.1 - fix bug with freezing WiFi chip
+ *    0.5.0 - Time handle for auto On/Off 
  */
 
 #define DEBUGING 1 // Switch debug output on and off by 1 or 0
@@ -233,3 +234,4 @@ extern const char style_css[];
 boolean auto_cycle = false;
 uint8_t playMode = 0;
 unsigned long auto_last_change = 0;
+DateTime now;

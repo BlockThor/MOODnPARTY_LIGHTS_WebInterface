@@ -3,6 +3,12 @@
 char main_js[] PROGMEM = R"EOF(
 let activeButton = null;
 
+let loop = setInterval(function () {
+    const now = new Date();
+    console.log('Time updated to', now.toTimeString().slice(0, 5));
+    document.getElementById('time').innerText = now.toTimeString().slice(0, 5);//now.toTimeString().replace('(', '\n(');
+}, 1000);
+
 function convert(integer) {
 let str = integer.toString(16);
 if (str.length === 1) return "0" + str;
@@ -154,12 +160,20 @@ evt.currentTarget.classList.add('activetab');
 }
 
 function sendCmd(cmd) {
-let xhttp = new XMLHttpRequest();
-console.log('Send CMD: ', cmd);
-xhttp.open('GET', 'cmd?' + cmd);
-xhttp.send(null);
+  let xhttp = new XMLHttpRequest();
+  console.log('Send CMD: ', cmd);
+  xhttp.open('GET', 'cmd?' + cmd);
+  xhttp.send(null);
 }
 
+function sendTime() {
+    const now = new Date();
+    let sTime = Math.floor(now.getTime() / 1000) - now.getTimezoneOffset() * 60;
+    console.log('Send time: ', sTime);
+    let xhttp = new XMLHttpRequest();
+    xhttp.open('PUT', 'time?' + sTime, true);
+    xhttp.send();
+}
 function sendWiFi() {
 let xhttp = new XMLHttpRequest();
 const formData = new FormData(document.querySelector('#wifisave'));

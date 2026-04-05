@@ -90,6 +90,20 @@ void srv_handle_cmd() {
   }
   webServer.send(200, "text/plain", "Ok");
 }
+
+
+void srv_handle_time() {
+  String sArg = webServer.argName(0);
+  DEBUG2N("Scan srv_handle_time: ", sArg);
+
+  uint32_t webTime = sArg.toInt();
+  setTime(webTime);
+  saveTime();
+  delay(0);
+  webServer.send(200, "text/plain", "Ok");
+}
+
+
 void srv_handle_not_found() {
   if (captivePortal()) { // If caprive portal redirect instead of displaying the error page.
     return;
@@ -105,47 +119,49 @@ void srv_handle_index_html() {
   String stringHTML = index_html;
   String page;
   char hexcol[6];
+  char buf[] = "hh:mm";
 
   // - - - txt processor - - -
-  stringHTML.replace("{TT}", String(F(MNP_TITLE)));
-  stringHTML.replace("{HD}", String(F(MNP_HEADER)));
-  stringHTML.replace("{FT}", String(F(MNP_FOOTER)));
+  stringHTML.replace("{Tm}", String(now.toString(buf))); delay(0);
 
-  sprintf(hexcol, "%06x", param.COLOR0);
-  stringHTML.replace("{C0}", String(hexcol));
-  sprintf(hexcol, "%06x", param.COLOR1);
-  stringHTML.replace("{C1}", String(hexcol));
-  sprintf(hexcol, "%06x", param.COLOR2);
-  stringHTML.replace("{C2}", String(hexcol));
+  stringHTML.replace("{TT}", String(F(MNP_TITLE))); delay(0);
+  stringHTML.replace("{HD}", String(F(MNP_HEADER))); delay(0);
+  stringHTML.replace("{FT}", String(F(MNP_FOOTER))); delay(0);
 
-  page = param_Page_setup();
-  stringHTML.replace("{PM}", page);
+  sprintf(hexcol, "%06x", param.COLOR0); delay(0);
+  stringHTML.replace("{C0}", String(hexcol)); delay(0);
+  sprintf(hexcol, "%06x", param.COLOR1); delay(0);
+  stringHTML.replace("{C1}", String(hexcol)); delay(0);
+  sprintf(hexcol, "%06x", param.COLOR2); delay(0);
+  stringHTML.replace("{C2}", String(hexcol)); delay(0);
 
-  page = allModes_Page_setup();
-  stringHTML.replace("{M0}", page);
-  page = monoModes_Page_setup();
-  stringHTML.replace("{M1}", page);
-  page = duoModes_Page_setup();
-  stringHTML.replace("{M2}", page);
-  page = rgbModes_Page_setup();
-  stringHTML.replace("{M3}", page);
-  page = specModes_Page_setup();
-  stringHTML.replace("{M4}", page);
+  page = param_Page_setup(); delay(0);
+  stringHTML.replace("{PM}", page); delay(0);
 
-  page = wifiInfo_Page_setup();
-  stringHTML.replace("{WR}", page);
+  page = allModes_Page_setup(); delay(0);
+  stringHTML.replace("{M0}", page); delay(0);
+  page = monoModes_Page_setup(); delay(0);
+  stringHTML.replace("{M1}", page); delay(0);
+  page = duoModes_Page_setup(); delay(0);
+  stringHTML.replace("{M2}", page); delay(0);
+  page = rgbModes_Page_setup(); delay(0);
+  stringHTML.replace("{M3}", page); delay(0);
+  page = specModes_Page_setup(); delay(0);
+  stringHTML.replace("{M4}", page); delay(0);
 
-  page = about_Page_setup();
-  stringHTML.replace("{AB}", page);
+  page = wifiInfo_Page_setup(); delay(0);
+  stringHTML.replace("{WR}", page); delay(0);
 
-  page = String(lamp.getLength());
-  stringHTML.replace("{SN}", page);
-  page = String(lamp.getPin());
-  stringHTML.replace("{SP}", page);
-  page = String(wifidata.wifiSSID_Ap);
-  stringHTML.replace("{AN}", page);
+  page = about_Page_setup(); delay(0);
+  stringHTML.replace("{AB}", page); delay(0);
 
-
+  page = String(lamp.getLength()); delay(0);
+  stringHTML.replace("{SN}", page); delay(0);
+  page = String(lamp.getPin()); delay(0);
+  stringHTML.replace("{SP}", page); delay(0);
+  page = String(wifidata.wifiSSID_Ap); delay(0);
+  stringHTML.replace("{AN}", page); delay(0);
+  page = "";
 
   // - - - - - - - - - - -
 
@@ -154,7 +170,6 @@ void srv_handle_index_html() {
   webServer.sendHeader("Expires", "-1");
   webServer.send(200, "text/html", stringHTML);
   stringHTML = "";
-  page = "";
 }
 
 void srv_handle_main_js() {

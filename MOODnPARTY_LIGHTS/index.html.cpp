@@ -241,6 +241,16 @@ FADE_RATE<span>
     <input id="ap" name="ap" type="password" autocomplete="current-password" maxlength="20" placeholder="password"></span>
     <input type='button' value='Save' onclick="sendApWiFi(event)"/>
 </form></div>
+  <!-- Bring time HERE -->
+  <div class="flex-col">
+  <form class="form">
+  <h4>Time</h4>
+  <p>This device's time now is</p>
+  <div class='' id='time'>00:00</div>
+  <p>Lamp's time set to</p>
+  <div class='' id='ltime'>{Tm}</div><br>
+  <input type="button" value="Synk Time Now" onclick="sendTime();">
+  </form></div>
 <div class='flex-col'>
 <form class='form'>
 <h4>Restart</h4>
