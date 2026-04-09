@@ -1,6 +1,8 @@
+//#include <TimeLib.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
+#include <RTClib.h>
 
 //#include <WS2812FX.h> // You can use this original lib
 #include <WS2812FX_MnP_edition.h> // but this one is better )
@@ -8,15 +10,19 @@
 #include "defs.h"
 
 WS2812FX lamp = WS2812FX(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+RTC_Millis rtc;
 
 
 void setup() { 
 
-  WiFi.mode(WIFI_OFF);
   Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);
   EEPROM.begin(512);
-  delay(100);
+  rtc.begin(DateTime(F(__DATE__), F(__TIME__)));
 
+#ifndef ESP8266
+  while (!Serial); // wait for serial port to connect. Needed for native USB
+#endif
 
   //  -= = = = = =  SETUP LAMP  = = = = = =-
   DEBUGN("WS2812FX setup");
@@ -26,6 +32,7 @@ void setup() {
 
   if (param.MAGIC ==  ESP.getChipId()) { // First start, need init ?
     applyParameters(); DEBUGN("ApplyParameters");
+    loadTime();
   } else {
     initParameters(); DEBUGN("Init");
   }
@@ -45,6 +52,7 @@ void setup() {
 
 void loop() {
   delay(0);
+  runTime();
   runLEDs();
   runWiFi();
 }
