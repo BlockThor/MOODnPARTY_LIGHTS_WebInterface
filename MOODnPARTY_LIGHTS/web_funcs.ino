@@ -210,13 +210,132 @@ void srv_handle_index_html() {
 }
 
 void srv_handle_main_js() {
+  DEBUG(" main.js requested");
   webServer.sendHeader("Cache-Control", "no-cache");
   webServer.send_P(200, "application/javascript", main_js);
 }
+// void srv_handle_vars_js() {
+//   DEBUG("vars.js requested");
+//   webServer.sendHeader("Cache-Control", "no-cache");
+//   webServer.send(200, "application/javascript", vars_setup());
+// }
+// void srv_handle_vars_js() {
+//   DEBUG("vars.js requested");
+//   webServer.sendHeader("Cache-Control", "no-cache");
+//   webServer.send_P(200, "application/javascript", vars_js);
+// } //vars_setup()
 void srv_handle_vars_js() {
-  webServer.sendHeader("Cache-Control", "no-cache");
-  webServer.send_P(200, "application/javascript", vars_js);
+  DEBUG(" vars.js requested");
+  webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  webServer.send(200, "application/javascript", "");
+  webServer.sendContent_P(PSTR("const param="));
+  webServer.sendContent(vars_setup());
+  webServer.sendContent_P(PSTR("TT:"));
+  webServer.sendContent_P(PSTR("\""));
+  webServer.sendContent_P(MNP_TITLE);
+  webServer.sendContent_P(PSTR("\","));
+
+  webServer.sendContent_P(PSTR("HD:"));
+  webServer.sendContent_P(PSTR("\""));
+  webServer.sendContent_P(MNP_HEADER);
+  webServer.sendContent_P(PSTR("\","));
+
+  webServer.sendContent_P(PSTR("FT:"));
+  webServer.sendContent_P(PSTR("\""));
+  webServer.sendContent_P(MNP_FOOTER);
+  webServer.sendContent_P(PSTR("\","));
+
+  webServer.sendContent_P(PSTR("AB:"));
+  webServer.sendContent_P(PSTR("\""));
+  webServer.sendContent_P(MNP_ABOUTCONTENT);
+  webServer.sendContent_P(PSTR("\","));
+
+  webServer.sendContent_P(PSTR("WR:"));
+  webServer.sendContent_P(PSTR("\""));
+  webServer.sendContent_P(PSTR("<p>through the wifi network:<br>Oinoussian_3</p><br><table><tbody><tr><th>WLAN config</th></tr><tr><td>SSID OinoussianCrew</td></tr><tr><td>IP 1.2.3.4</td></tr></tbody></table>"));
+  webServer.sendContent_P(PSTR("\"}"));
+  webServer.sendContent("");
+  // Delay(100);
+  webServer.client().stop();
 }
+
+void srv_handle_modes_js() {
+  DEBUG(" modes.js requested");
+  webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  webServer.send(200, "application/javascript", "");
+
+  webServer.sendContent_P(PSTR("const modes={"));
+
+  // monoModes array
+  webServer.sendContent_P(PSTR("monoModes:["));
+  uint8_t num = sizeof(monoModes);
+  for (uint8_t i = 0; i < num; i++) {
+    webServer.sendContent("\"");
+    webServer.sendContent(lamp.getModeName(monoModes[i]));
+    webServer.sendContent("\"");
+    if (i < num - 1) {
+      webServer.sendContent(",");
+    }
+  }
+  webServer.sendContent_P(PSTR("],"));
+  // duoModes array
+  webServer.sendContent_P(PSTR("duoModes:["));
+  num = sizeof(duoModes);
+  for (uint8_t i = 0; i < num; i++) {
+    webServer.sendContent("\"");
+    webServer.sendContent(lamp.getModeName(duoModes[i]));
+    webServer.sendContent("\"");
+    if (i < num - 1) {
+      webServer.sendContent(",");
+    }
+  }
+  webServer.sendContent_P(PSTR("],"));
+  // rgbModes array
+  webServer.sendContent_P(PSTR("rgbModes:["));
+  num = sizeof(rgbModes);
+  for (uint8_t i = 0; i < num; i++) {
+    webServer.sendContent("\"");
+    webServer.sendContent(lamp.getModeName(rgbModes[i]));
+    webServer.sendContent("\"");
+    if (i < num - 1) {
+      webServer.sendContent(",");
+    }
+  }
+  webServer.sendContent_P(PSTR("],"));
+  // specModes array
+  webServer.sendContent_P(PSTR("specModes:["));
+  num = sizeof(specModes);
+  for (uint8_t i = 0; i < num; i++) {
+    webServer.sendContent("\"");
+    webServer.sendContent(lamp.getModeName(specModes[i]));
+    webServer.sendContent("\"");
+    if (i < num - 1) {
+      webServer.sendContent(",");
+    }
+  }
+  webServer.sendContent("],");
+  // allModes array
+  webServer.sendContent_P(PSTR("allModes:["));
+  num = lamp.getModeCount();
+  for (uint8_t i = 0; i < num; i++) {
+    webServer.sendContent("\"");
+    webServer.sendContent(lamp.getModeName(i));
+    webServer.sendContent("\"");
+    if (i < num - 1) {
+      webServer.sendContent(",");
+    }
+  }
+  webServer.sendContent("],");
+
+  webServer.sendContent("};");
+  webServer.sendContent("");
+  // Delay(100);
+  webServer.client().stop();
+}
+
+
+
+
 void srv_handle_style_css() {
   webServer.sendHeader("Cache-Control", "no-cache");
   webServer.send_P(200, "text/css", style_css);
@@ -367,7 +486,7 @@ void srv_handle_set() {
 
 
 // - - - - - - PAGE SETUPS - - - - - -
-const char* param_Page_setup() {
+const char* vars_setup() {
   static char buf[300];  // static so it persists after function returns
   DateTime tOn = DateTime(param.TIMEON);
   DateTime tOff = DateTime(param.TIMEOFF);
@@ -379,16 +498,13 @@ const char* param_Page_setup() {
   tOff.toString(bufT2);
   char hexcol0[7];
   sprintf(hexcol0, "%06x", param.COLOR0);
-  Serial.print(param.COLOR0, HEX);Serial.print(' ');Serial.println(hexcol0);
   char hexcol1[7];
   sprintf(hexcol1, "%06x", param.COLOR1);
-  Serial.print(param.COLOR1, HEX);Serial.print(' ');Serial.println(hexcol1);
   char hexcol2[7];
   sprintf(hexcol2, "%06x", param.COLOR2);
-  Serial.print(param.COLOR2, HEX);Serial.print(' ');Serial.println(hexcol2);
   snprintf(buf, sizeof(buf),
            "{of:%d, br:%u, ds:%u, ap:%u, at:%u, dr:'%c', sz:%u, fd:%u, SN:%u, SP:%u, "
-           "Tm:\"%s\", T1:\"%s\", T2:\"%s\", C0:\"#%s\", C1:\"#%s\", C2:\"#%s\", AN:\"%s\"}",
+           "Tm:\"%s\", T1:\"%s\", T2:\"%s\", C0:\"#%s\", C1:\"#%s\", C2:\"#%s\", AN:\"%s\",",
            lamp.isRunning() ? 1 : 0,
            param.BRI,
            param.SPEED,

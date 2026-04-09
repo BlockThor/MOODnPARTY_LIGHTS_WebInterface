@@ -133,6 +133,7 @@ void startServer() {
   webServer.on("/", srv_handle_index_html);
   webServer.on("/main.js", srv_handle_main_js);
   webServer.on("/vars.js", srv_handle_vars_js);
+  webServer.on("/modes.js", srv_handle_modes_js);
   webServer.on("/style.css", srv_handle_style_css);
   webServer.on("/set", HTTP_POST, srv_handle_set);
   webServer.on("/scan", srv_handle_wifiscan);

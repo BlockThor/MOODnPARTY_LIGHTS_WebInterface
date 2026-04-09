@@ -62,7 +62,6 @@ void saveTime() {
   EEPROM.put(addr, _time);
   if (EEPROM.commit()) {
     Delay(10);
-    DEBUG2N("Time saved ", _time.unixtime());
   } else {
     DEBUGN("EEPROM error:Time");
   }
@@ -81,7 +80,7 @@ void loadTime() {
 void initParameters() {
   memset(wifidata.wifiSSID, 0, sizeof(wifidata.wifiSSID) - 1);
   memset(wifidata.wifiPass, 0, sizeof(wifidata.wifiPass) - 1);
-  // #include <cstring>  // for strncpy
+  
   strncpy(wifidata.wifiSSID_Ap, WIFI_AP_SSID, sizeof(wifidata.wifiSSID_Ap) - 1);
   wifidata.wifiSSID_Ap[sizeof(wifidata.wifiSSID_Ap) - 1] = '\0';
 

@@ -10,6 +10,7 @@ char index_html[] PROGMEM = R"EOF(
 <title></title>
 
 <script type='text/javascript' src='vars.js'></script>
+<script type='text/javascript' src='modes.js'></script>
 <script type='text/javascript' src='main.js'></script>
 <link href='style.css' rel="stylesheet"/>
 </head>
@@ -247,16 +248,6 @@ FADE_RATE<span>
 </svg>
     <input id="AP" name="ap" type="password" autocomplete="current-password" maxlength="20" placeholder="password"></span>
     <input type='button' value='Save' onclick="sendApWiFi(event)"/>
-</form></div>
-  <!-- Bring time HERE -->
-  <div class="flex-col">
-  <form class="form">
-  <h4>Time</h4>
-  <p>This device's time now is</p>
-  <div class='' id='time'>00:00</div>
-  <p>Lamp's time set to</p>
-  <div class='' id='ltime'></div><br>
-  <input type="button" value="Synk Time Now" onclick="sendTime();">
   </form></div>
 <div class='flex-col'>
 <form class='form'>
@@ -277,7 +268,7 @@ FADE_RATE<span>
  <div id="AB"></div>
 </div></div>
 </div></div>
-  <footer id="FT" onclick="gem();">Vasyl Yudin 2023,2024,2026</footer>
+  <footer id="FT" onclick="gem();">VYL</footer>
 </body>
 </html>
 )EOF";

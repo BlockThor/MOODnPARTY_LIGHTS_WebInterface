@@ -3,11 +3,6 @@
 char main_js[] PROGMEM = R"EOF(
 let activeButton = null;
 
-let loop = setInterval(function () {
-    const now = new Date();
-    document.getElementById('time').innerText = now.toTimeString().slice(0, 5);//now.toTimeString().replace('(', '\n(');
-}, 1000);
-
 function convert(integer) {
 let str = integer.toString(16);
 if (str.length === 1) return "0" + str;
@@ -15,27 +10,21 @@ else return str;
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.title = param.TT;
-    document.getElementById("HD").value = param.HD;
-    document.getElementById("color0").value = param.C0;
-    document.getElementById("color2").value = param.C2;
-    document.getElementById("ltime").innerText = param.Tm;
-    document.getElementById("time-in").value = param.T1;
-    document.getElementById("time-out").value = param.T2;
-    document.getElementById("AN").value = param.AN;
-    document.getElementById("SN").value = param.SN;
-    document.getElementById("SP").value = param.SP;
-    document.getElementById("monomodes").insertAdjacentHTML("afterbegin", param.M1);
-    document.getElementById("duomodes").insertAdjacentHTML("afterbegin", param.M2);
-    document.getElementById("rgbmodes").insertAdjacentHTML("afterbegin", param.M3);
-    document.getElementById("specmodes").insertAdjacentHTML("afterbegin", param.M4);
-    document.getElementById("allmodes").insertAdjacentHTML("afterbegin", param.M4);
-    document.getElementById("FT").textContent = param.FT;
-    document.getElementById("AB").insertAdjacentHTML("afterbegin", param.AB);
-    document.getElementById("WR").insertAdjacentHTML("afterbegin", param.WR);
+document.title = param.TT;
+document.getElementById("HD").insertAdjacentHTML("afterbegin", param.HD);
+document.getElementById("color0").value = param.C0;
+document.getElementById("color2").value = param.C2;
+document.getElementById("time-in").value = param.T1;
+document.getElementById("time-out").value = param.T2;
+document.getElementById("AN").value = param.AN;
+document.getElementById("SN").value = param.SN;
+document.getElementById("SP").value = param.SP;
+document.getElementById("FT").textContent = param.FT;
+document.getElementById("AB").insertAdjacentHTML("afterbegin", param.AB);
+document.getElementById("WR").insertAdjacentHTML("afterbegin", param.WR);
 
-    document.getElementById("colorDot0").style.backgroundColor = param.C0;
-    document.getElementById("colorDot2").style.backgroundColor = param.C2;
+document.getElementById("colorDot0").style.backgroundColor = param.C0;
+document.getElementById("colorDot2").style.backgroundColor = param.C2;
 
 let donut1 = document.getElementById('donut1');
 let donut2 = document.getElementById('donut2');
@@ -45,12 +34,32 @@ drawC(ctx, donut1.width / 2, donut1.height / 2, donut1.width / 3);
 ctx = donut2.getContext('2d',{willReadFrequently: true});
 drawC(ctx, donut2.width / 2, donut2.height / 2, donut2.width / 3);
 
+// helper to populate a <ul> with <li> items
+function populateList(array, ulId) {
+  const ul = document.getElementById(ulId);
+  if (!ul || !array) return;
+  array.forEach(modeName => {
+      const li = document.createElement("li");
+      li.textContent = modeName;
+      ul.appendChild(li);
+  });
+}
+console.log(modes);
+// populate all mode lists
+populateList(modes.monoModes, "monomodes");
+populateList(modes.duoModes, "duomodes");
+populateList(modes.rgbModes, "rgbmodes");
+populateList(modes.specModes, "specmodes");
+populateList(modes.allModes, "allmodes");
+
 document.querySelectorAll('ul#allmodes li').forEach(initAllMode);
 document.querySelectorAll('ul#monomodes li').forEach(initMonoMode);
 document.querySelectorAll('ul#duomodes li').forEach(initDuoMode);
 document.querySelectorAll('ul#rgbmodes li').forEach(initRGBMode);
 document.querySelectorAll('ul#specmodes li').forEach(initSpecMode);
 document.getElementById("defaultTab").click();
+
+sendTime(); 
 
 let radioItems = document.querySelectorAll('input[type="radio"]');
 radioItems.forEach((e) => {
@@ -180,62 +189,61 @@ evt.currentTarget.classList.add('activetab');
 }
 
 function sendCmd(cmd) {
-  let xhttp = new XMLHttpRequest();
-  console.log('Send CMD: ', cmd);
-  xhttp.open('POST', '/cmd', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('command=' + encodeURIComponent(cmd));
+let xhttp = new XMLHttpRequest();
+console.log('Send CMD: ', cmd);
+xhttp.open('POST', '/cmd', true);
+xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhttp.send('command=' + encodeURIComponent(cmd));
 }
 
 function sendTime() {
-  const now = new Date();
-  let sTime = Math.floor(now.getTime() / 1000) - now.getTimezoneOffset() * 60;
-  console.log('Send time: ', sTime);
+const now = new Date();
+let sTime = Math.floor(now.getTime() / 1000) - now.getTimezoneOffset() * 60;
+console.log('Send time: ', sTime);
 
-  let xhttp = new XMLHttpRequest();
-  xhttp.open('PUT', '/time', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.send('timestamp=' + sTime);
+let xhttp = new XMLHttpRequest();
+xhttp.open('PUT', '/time', true);
+xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhttp.send('timestamp=' + sTime);
 
-  document.getElementById('ltime').innerText = now.toTimeString().slice(0, 5);
 }
 function sendTimers() {
-  // Read HH:MM strings
-    const inStr = document.getElementById('time-in').value;   // e.g. "07:30"
-    const outStr = document.getElementById('time-out').value; // e.g. "23:30"
+// Read HH:MM strings
+const inStr = document.getElementById('time-in').value;   // e.g. "07:30"
+const outStr = document.getElementById('time-out').value; // e.g. "23:30"
 
-  // Convert "HH:MM" to Unix timestamp for today
-  function hhmmToUnix(hhmm) {
-    if (!hhmm) return 0;
-    const parts = hhmm.split(':');
-    const h = parseInt(parts[0], 10) || 0;
-    const m = parseInt(parts[1], 10) || 0;
-    
-    const now = new Date();
-    now.setHours(h, m, 0, 0);
-    return Math.floor(now.getTime() / 1000);
-  }
+// Convert "HH:MM" to Unix timestamp for today
+function hhmmToUnix(hhmm) {
+if (!hhmm) return 0;
+const parts = hhmm.split(':');
+const h = parseInt(parts[0], 10) || 0;
+const m = parseInt(parts[1], 10) || 0;
 
-  const onUnix  = hhmmToUnix(inStr);
-  const offUnix = hhmmToUnix(outStr);
+const now = new Date();
+now.setHours(h, m, 0, 0);
+return Math.floor(now.getTime() / 1000) - now.getTimezoneOffset() * 60;
+}
 
-  console.log('Send timers (Unix): on=', onUnix, 'off=', offUnix);
+const onUnix = hhmmToUnix(inStr);
+const offUnix = hhmmToUnix(outStr);
 
-  const body = 'on=' + encodeURIComponent(onUnix) + '&off=' + encodeURIComponent(offUnix);
+console.log('Send timers (Unix): on=', onUnix, 'off=', offUnix);
 
-  const xhttp = new XMLHttpRequest();
-  xhttp.open('PUT', '/timer', true);
-  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState === 4) {
-      if (xhttp.status === 200) {
-        console.log('Schedule updated');
-      } else {
-        console.warn('Failed to update schedule', xhttp.status, xhttp.responseText);
-      }
-    }
-  };
-  xhttp.send(body);
+const body = 'on=' + encodeURIComponent(onUnix) + '&off=' + encodeURIComponent(offUnix);
+
+const xhttp = new XMLHttpRequest();
+xhttp.open('PUT', '/timer', true);
+xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhttp.onreadystatechange = function () {
+if (xhttp.readyState === 4) {
+if (xhttp.status === 200) {
+  console.log('Schedule updated');
+} else {
+  console.warn('Failed to update schedule', xhttp.status, xhttp.responseText);
+}
+}
+};
+xhttp.send(body);
 }
 
 function sendWiFi() {

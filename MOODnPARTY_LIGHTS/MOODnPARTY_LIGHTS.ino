@@ -54,7 +54,7 @@ void setup() {
   }
 
   DEBUGN("Setup File: \n - == -");
-  Serial.println(param_Page_setup());
+  Serial.println(vars_setup());
 }
 
 void loop() {

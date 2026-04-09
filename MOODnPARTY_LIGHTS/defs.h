@@ -3,11 +3,11 @@
 #define LED_TYPE NEO_GRB + NEO_KHZ800
 
 #define MNP_TITLE "MOOD'n'PARTY LIGHTS"
-#define MNP_HEADER "<h1>MOOD'n'PARTY LIGHTS</h1>" //<h4> Some more text in header </h4>
+#define MNP_HEADER "MOOD'n'PARTY LIGHTS" //<h4> Some more text in header </h4>
 #define MNP_ABOUTCONTENT "<h2>&#x1F7E1;&#x1F7E3;&#x1F7E4; MOOD'n'PARTY &#x1F534;&#x1F7E2;&#x1F535;<br> \
   LIGHTS</h2><p>Let's talk about!</p><p>Thank you for using my lovely Mood & Party Lights! &#x1F525 </p> \
   <p>PM Me and Follow Me on IG: @<a rel='nofollow me' href='https://instagram.com/vasylyudin/'>VasylYudin</a></p>"
-#define MNP_FOOTER "Vasyl Yudin 2023-2024"
+#define MNP_FOOTER "Vasyl Yudin 2023-2024, 2026"
 
 #define WIFI_AP_SSID "MOODLAMP"  // default AP WiFi Name
 #define WIFI_AP_PASS  "MOODLAMP" // default AP WiFi Password
@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 1)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 2)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -149,8 +149,9 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *            WiFi scan now async without frizing LEDs
  *    0.4.0 - add mode: Rocking (FX_MODE_ROCKING)
  *    0.4.1 - fix bug with freezing WiFi chip
- *    0.5.0 - Time handle for auto On/Off
+ *    0.5.0 - Time handle for auto On/Off 
  *    0.5.1 - Removing 'String' from use
+ *    0.5.2 - Remove 'String' from use
  */
 
 #if DEBUGING
@@ -236,6 +237,7 @@ struct LampParameters {
 extern const char index_html[];
 extern const char main_js[];
 extern const char vars_js[];
+// extern const char modes_js[];
 extern const char style_css[];
 
 // QUICKFIX...See https://github.com/esp8266/Arduino/issues/263
