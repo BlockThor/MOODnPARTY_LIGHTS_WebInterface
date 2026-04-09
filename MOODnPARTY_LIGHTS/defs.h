@@ -14,6 +14,8 @@
 #define HOSTNAME "moodlamp2"
 #define TTC 60000 // Time_To_Connect to WiFi
 
+#define DEBUGING 1 // Switch debug output on and off by 1 or 0
+
 #if defined(WS2812FX_MNP_EDITION_h)
 const uint8_t monoModes[] = {
   FX_MODE_STATIC,
@@ -136,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 0)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 1)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -147,25 +149,30 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *            WiFi scan now async without frizing LEDs
  *    0.4.0 - add mode: Rocking (FX_MODE_ROCKING)
  *    0.4.1 - fix bug with freezing WiFi chip
- *    0.5.0 - Time handle for auto On/Off 
+ *    0.5.0 - Time handle for auto On/Off
+ *    0.5.1 - Removing 'String' from use
  */
 
-#define DEBUGING 1 // Switch debug output on and off by 1 or 0
 #if DEBUGING
+#define DEBUGX(fmt, ...) ::printf((PGM_P)PSTR(fmt), ##__VA_ARGS__)
 #define DEBUG(s)     { Serial.print(F(s)); }
 #define DEBUG2(s,v)  { Serial.print(F(s)); Serial.print(v); }
-//#define DEBUGV(v)    { Serial.print(v); }
+// #define DEBUGV(v)    { Serial.print(v); }
 #define DEBUG2X(s,v) { Serial.print(F(s)); Serial.print(v, HEX); }
 #define DEBUGN(s)     { Serial.println(F(s)); }
 #define DEBUG2N(s,v)  { Serial.print(F(s)); Serial.println(v); }
 #define DEBUGVN(v)    {Serial.println(v); }
 #define DEBUG2XN(s,v) { Serial.print(F(s)); Serial.println(v, HEX); }
 #else
+// #ifndef DEBUGX
+#define DEBUGX(...)  
 #define DEBUG(s)
 #define DEBUG2(s,v)
+// #define DEBUGV(v)
 #define DEBUG2X(s,v)
 #define DEBUGN(s)
 #define DEBUG2N(s,v)
+#define DEBUGVN(v)
 #define DEBUG2XN(s,v)
 #endif
 
@@ -176,9 +183,10 @@ enum State {
   STATE_RUNNING_AP,
   STATE_RUNNING_AP_STA,
   STATE_RUNNING_STA,
+  STATE_RUNNING_NOWIFI,
   STATE_RESET,
   STATE_ERROR,
-  STATE_MAX_VALUE
+  STATE_MAX_VALUE = 255
 } lampState;
 
 struct WiFiData {
@@ -216,6 +224,8 @@ struct LampParameters {
   uint16_t  LEDCOUNT;
   uint8_t   LEDTYPE;
   uint8_t   FLAGS;
+  uint32_t  TIMEON;
+  uint32_t  TIMEOFF;
 } param;
 
 #define COLORMODE_MONO 1
@@ -225,13 +235,17 @@ struct LampParameters {
 
 extern const char index_html[];
 extern const char main_js[];
+extern const char vars_js[];
 extern const char style_css[];
 
 // QUICKFIX...See https://github.com/esp8266/Arduino/issues/263
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 
+boolean isStandby = false;
 boolean auto_cycle = false;
 uint8_t playMode = 0;
 unsigned long auto_last_change = 0;
 DateTime now;
+DateTime timeOn;
+DateTime timeOff;

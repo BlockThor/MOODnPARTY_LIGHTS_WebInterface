@@ -1,6 +1,6 @@
-#define WIFI_AP_TIMEOUT    60000
-#define WIFI_AP_IP         IPAddress(1, 2, 3, 4)
-#define WIFI_AP_SUBNET     IPAddress(255, 255, 255, 0)
+#define WIFI_AP_TIMEOUT 60000
+#define WIFI_AP_IP IPAddress(1, 2, 3, 4)
+#define WIFI_AP_SUBNET IPAddress(255, 255, 255, 0)
 //#define WIFI_DNS_PORT      (byte)53
 
 
@@ -12,14 +12,14 @@ uint8_t lastWiFiStatus;
 
 void runWiFi() {
   switch (lampState) {
-    case   STATE_START_AP_ONLY:  startAP();      break;
-    case   STATE_START_AP_STA:   startAPSTA();   break;
-    case   STATE_SWITCH_TO_STA:  switchToSTA();  break;
-    case   STATE_RUNNING_AP:     runningAP();    break;
-    case   STATE_RUNNING_AP_STA: runningAPSTA(); break;
-    case   STATE_RUNNING_STA:    runningSTA(); break;
-    case   STATE_RESET:          ESP.reset(); break;
-    default: enterError();   break;
+    case STATE_START_AP_ONLY: startAP(); break;
+    case STATE_START_AP_STA: startAPSTA(); break;
+    case STATE_SWITCH_TO_STA: switchToSTA(); break;
+    case STATE_RUNNING_AP: runningAP(); break;
+    case STATE_RUNNING_AP_STA: runningAPSTA(); break;
+    case STATE_RUNNING_STA: runningSTA(); break;
+    case STATE_RESET: ESP.reset(); break;
+    default: enterError(); break;
   }
 }
 
@@ -50,7 +50,7 @@ bool startAPSTA() {
   dnsServer.start(DNS_PORT, "*", apIP);
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   startServer();
-  
+
   if (connectWiFi()) startServer();
   else return false;
 
@@ -94,10 +94,11 @@ bool connectWiFi() {
     DEBUGN("WiFi.begin");
     unsigned long startTimer = millis();
     while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_WRONG_PASSWORD && millis() - startTimer < TTC) {
-      Delay(500);
+      Delay(250);
+
       DEBUG("|");
     }
-    DEBUGVN(getWiFiStateString(WiFi.status()));
+    DEBUGVN(getWiFiState(WiFi.status()));
     // Check connection
     if (WiFi.status() == WL_CONNECTED) {
       DEBUG2N(" Connected: ", WiFi.localIP());
@@ -121,7 +122,7 @@ bool connectWiFi() {
     }
   } else {
     DEBUG2N("WiFi.NotBegin: ", WiFi.status());
-    DEBUGVN(getWiFiStateString(WiFi.status()));
+    DEBUGVN(getWiFiState(WiFi.status()));
     setLampState(STATE_RUNNING_AP);
     return false;
   }
@@ -131,16 +132,18 @@ void startServer() {
   DEBUGN("HTTP server setup");
   webServer.on("/", srv_handle_index_html);
   webServer.on("/main.js", srv_handle_main_js);
+  webServer.on("/vars.js", srv_handle_vars_js);
   webServer.on("/style.css", srv_handle_style_css);
-  webServer.on("/set", srv_handle_set);
+  webServer.on("/set", HTTP_POST, srv_handle_set);
   webServer.on("/scan", srv_handle_wifiscan);
   webServer.on("/sendWiFi", srv_handle_sendwifi);
   webServer.on("/sendApWiFi", srv_handle_sendapwifi);
-  webServer.on("/cmd", srv_handle_cmd);
+  webServer.on("/cmd", HTTP_POST, srv_handle_cmd);
   webServer.on("/time", srv_handle_time);
+  webServer.on("/timer", HTTP_PUT, srv_handle_timer);
 
-  webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
-  webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
+  // webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
+  // webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
   webServer.onNotFound(srv_handle_not_found);
 
   webServer.begin();
@@ -170,8 +173,7 @@ void enterError() {
   setLampState(STATE_RESET);
 }
 
-const char * const WIFI_STATE[] PROGMEM
-{
+const char* const WIFI_STATE[] PROGMEM{
   "IDLE_STATUS",
   "NO_SSID_AVAIL",
   "SCAN_COMPLETED",
@@ -183,7 +185,7 @@ const char * const WIFI_STATE[] PROGMEM
   "FAILED",
 };
 
-String getWiFiStateString(uint8_t s) {
+const char* getWiFiState(uint8_t s) {
 #ifdef DEBUGING
   if (s <= 7) return WIFI_STATE[s];
   return WIFI_STATE[8];

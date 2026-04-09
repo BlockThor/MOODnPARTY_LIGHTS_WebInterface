@@ -6,13 +6,13 @@ void saveCredentials() {
 /** Load WLAN credentials from EEPROM */
 void loadCredentials() {
   EEPROM.get(0, wifidata);
-  if (String(wifidata.wifiSSID) == "") {
+  if (wifidata.wifiSSID[0] == '\0') {
     DEBUGN("No WiFi data stored");
   } else {
     DEBUG2("Recovered SSID:", wifidata.wifiSSID);
     DEBUG2N(" Pass:", strlen(wifidata.wifiPass) > 0 ? F("********") : F("<no password>"));
   }
-  if (String(wifidata.wifiSSID_Ap) == "") {
+  if (wifidata.wifiSSID_Ap[0] == '\0') {
     DEBUGN("No ApWiFi data stored");
   } else {
     DEBUG2("Recovered SSID_Ap:", wifidata.wifiSSID_Ap);
@@ -51,16 +51,18 @@ void loadParameters() {
   DEBUG2N("pL_Type:\t", param.LEDTYPE);
   DEBUG2N("FADE:\t", ((param.OPTION) & FADE_GLACIAL));
   DEBUG2N("SIZE:\t", ((param.OPTION) & SIZE_XLARGE));
+  DEBUG2N("TimeOn:\t", DateTime(param.TIMEON).timestamp(DateTime::TIMESTAMP_FULL));
+  DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_FULL));
 }
 
 /** Save Time to EEPROM */
 void saveTime() {
   uint8_t addr = sizeof(wifidata) + 2 + sizeof(param);
-  DateTime mem_time = rtc.now();
-  EEPROM.put(addr, mem_time);
+  DateTime _time = rtc.now();
+  EEPROM.put(addr, _time);
   if (EEPROM.commit()) {
     Delay(10);
-    DEBUG2N("Time saved", mem_time.unixtime());
+    DEBUG2N("Time saved ", _time.unixtime());
   } else {
     DEBUGN("EEPROM error:Time");
   }
@@ -68,9 +70,9 @@ void saveTime() {
 /** Save Time from EEPROM */
 void loadTime() {
   uint8_t addr = sizeof(wifidata) + 2 + sizeof(param);
-  DateTime mem_time;
-  EEPROM.get(addr, mem_time);
-  rtc.adjust(mem_time);
+  DateTime _time;
+  EEPROM.get(addr, _time);
+  rtc.adjust(_time);
   now = rtc.now();
   DEBUG2("Time loaded ", now.hour());
   DEBUG2N(":", now.minute());
@@ -79,8 +81,12 @@ void loadTime() {
 void initParameters() {
   memset(wifidata.wifiSSID, 0, sizeof(wifidata.wifiSSID) - 1);
   memset(wifidata.wifiPass, 0, sizeof(wifidata.wifiPass) - 1);
-  String(WIFI_AP_SSID).toCharArray(wifidata.wifiSSID_Ap, 20);
-  String(WIFI_AP_PASS).toCharArray(wifidata.wifiPass_Ap, 20);
+  // #include <cstring>  // for strncpy
+  strncpy(wifidata.wifiSSID_Ap, WIFI_AP_SSID, sizeof(wifidata.wifiSSID_Ap) - 1);
+  wifidata.wifiSSID_Ap[sizeof(wifidata.wifiSSID_Ap) - 1] = '\0';
+
+  strncpy(wifidata.wifiPass_Ap, WIFI_AP_PASS, sizeof(wifidata.wifiPass_Ap) - 1);
+  wifidata.wifiPass_Ap[sizeof(wifidata.wifiPass_Ap) - 1] = '\0';
   param = paramsDefault;
   param.MAGIC = ESP.getChipId();
   DEBUGN("Set to default");

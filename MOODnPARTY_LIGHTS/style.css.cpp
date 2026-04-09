@@ -112,7 +112,7 @@ body, .txt{
   background-color: #d0d0d0;
   color: #404040;
   }
-  input[type='number'] {
+  input[type='number'] ,input[type='time']{
     display: block;
     cursor: text;
     margin: 3px;
@@ -120,6 +120,9 @@ body, .txt{
     border: 2px solid #404040;
     border-radius: 5px;
     max-width: 60px;
+  }
+  input[type='time']{
+    max-width: 120px;
   }
   input[type='color'] {
   position: absolute;
