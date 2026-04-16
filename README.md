@@ -1,9 +1,11 @@
 [![Stargazers][stars-shield]][stars-url] [![Forks][forks-shield]][forks-url] [![Contributors][contributors-shield]][contributors-url]
-[![Issues][issues-shield]][issues-url] [![Code][code-shileld]][code-url] [![MIT License][license-shield]][license-url] [![Instagram][instagram-shield]][instagram-url]
+[![Issues][issues-shield]][issues-url] [![Code][code-shield]][code-url] [![MIT License][license-shield]][license-url] [![Instagram][instagram-shield]][instagram-url]
 
 <p align="center"> <img src="https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition/blob/main/WS2812FX_MnP_logo.png" align="center" width="500"/> </p>
 
 # 🟡🟣🟤 MOOD'n'PARTY Lights 🔴🟢🔵 <br> More fun with colorful lights for all!
+
+MOOD'n'PARTY Lights is a web-based control interface for WS2812b LED strips powered by ESP8266, designed to create colorful and dynamic lighting effects for your parties or relaxing environments. Control your lights from any device with a browser -- no dependencies or WiFi credentials needed.
 
 ## Interface
 
@@ -28,34 +30,39 @@
 1. Install the [Adafruit NeoPixel library](https://github.com/adafruit/Adafruit_NeoPixel) (v1.1.7 or newer).
 2. Install the [WS2812FX_MOODnPARTY_Edition library](https://github.com/BlockThor/MOODnPARTY_LIGHTS_WebInterface)
 3. Download this repository.
-4. Extract the contents into your any directory.
+4. Extract the contents into any directory.
 5. Open the Arduino IDE and open sketch `MOODnPARTY_LIGHTS.ino`.
-6. Upload sketch to you ESP8266 (tested with NodeMCU v3).
+6. Upload sketch to your ESP8266 (tested with NodeMCU v3).
+   
+### Usage
+
+1. After uploading, connect your device to the ESP8266’s WiFi AP.
+2. Open a web browser and navigate to `1.2.3.4` to use the control interface.
 
 ## Hardware
 
-1. WS2812b strip - Ideally 60 LEDs with high density, verical arrangement.
-2. ESP8266 - NodeMCU
-3. Usb cable
+- ESP8266 (NodeMCU recommended)
+- WS2812b LED strip (e.g., 60 LEDs, vertical arrangement recommended)
+- Arduino IDE
 
 ## Software
 
-No special software required. The lights to be controlled through web browser on you device.
+No special software required. The lights to be controlled through web browser on your device.
 
 ## ToDo
 
-- [x] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
+- [x] Add parameters tab to change pin, number of LEDs, type of LEDs, name and password of AP, etc.
 - [x] Load time from device, Time to Switch On/Off
 - [ ] Timer to switch off
 
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
 - [ ] Light / Dark color schemes.
-- [ ] Presets (samething like Halloween, Circus Combustus, etc)
+- [ ] Presets (something like Halloween, Circus Combustus, etc)
 - [ ] Custom presets (set of Mode/Submode/Colors(palette)/Speed/Bri/ElementSize/FadeRate)
 ## PS
 
 > [!TIP]
-> Tap footer on interface to find out 💎
+> Tap a footer on the interface to find out 💎
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
