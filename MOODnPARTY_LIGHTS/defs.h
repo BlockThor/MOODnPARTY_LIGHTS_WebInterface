@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 2)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 3)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -151,7 +151,8 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *    0.4.1 - fix bug with freezing WiFi chip
  *    0.5.0 - Time handle for auto On/Off 
  *    0.5.1 - Removing 'String' from use
- *    0.5.2 - Remove 'String' from use
+ *    0.5.2 - Remove 'String' from use, autosync time
+ *    0.5.3 - Fix WiFiInfo
  */
 
 #if DEBUGING

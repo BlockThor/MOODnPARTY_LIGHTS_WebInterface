@@ -210,22 +210,13 @@ void srv_handle_index_html() {
 }
 
 void srv_handle_main_js() {
-  DEBUG(" main.js requested");
+  DEBUG(" main.js ");
   webServer.sendHeader("Cache-Control", "no-cache");
   webServer.send_P(200, "application/javascript", main_js);
 }
-// void srv_handle_vars_js() {
-//   DEBUG("vars.js requested");
-//   webServer.sendHeader("Cache-Control", "no-cache");
-//   webServer.send(200, "application/javascript", vars_setup());
-// }
-// void srv_handle_vars_js() {
-//   DEBUG("vars.js requested");
-//   webServer.sendHeader("Cache-Control", "no-cache");
-//   webServer.send_P(200, "application/javascript", vars_js);
-// } //vars_setup()
+
 void srv_handle_vars_js() {
-  DEBUG(" vars.js requested");
+  DEBUG(" vars.js ");
   webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
   webServer.send(200, "application/javascript", "");
   webServer.sendContent_P(PSTR("const param="));
@@ -252,15 +243,55 @@ void srv_handle_vars_js() {
 
   webServer.sendContent_P(PSTR("WR:"));
   webServer.sendContent_P(PSTR("\""));
-  webServer.sendContent_P(PSTR("<p>through the wifi network:<br>Oinoussian_3</p><br><table><tbody><tr><th>WLAN config</th></tr><tr><td>SSID OinoussianCrew</td></tr><tr><td>IP 1.2.3.4</td></tr></tbody></table>"));
+  // webServer.sendContent_P(PSTR("<p>through the wifi network:<br>Oinoussian_3</p><br><table><tbody><tr><th>WLAN config</th></tr><tr><td>SSID OinoussianCrew</td></tr><tr><td>IP 1.2.3.4</td></tr></tbody></table>"));
+   // Connection type
+  if (webServer.client().localIP() == WIFI_AP_IP) {
+    webServer.sendContent_P(PSTR("connection:\'softAP\',<br>"));
+    webServer.sendContent_P(PSTR("ssid:\'"));
+    webServer.sendContent(wifidata.wifiSSID_Ap);
+    webServer.sendContent_P(PSTR("\'<br>"));
+  } else {
+    webServer.sendContent_P(PSTR("connection:\'station\'<br>"));
+    webServer.sendContent_P(PSTR("ssid:\'"));
+    webServer.sendContent(wifidata.wifiSSID);
+    webServer.sendContent_P(PSTR("\'<br>"));
+  }
+
+  // SoftAP config if not running STA
+  if (lampState != STATE_RUNNING_STA) {
+    // webServer.sendContent_P(PSTR("\"softap\":{"));
+    webServer.sendContent_P(PSTR("ssid:\'"));
+    webServer.sendContent(wifidata.wifiSSID_Ap);
+    webServer.sendContent_P(PSTR("\', ip:\'"));
+    webServer.sendContent(WiFi.softAPIP().toString());
+    webServer.sendContent_P(PSTR("\'"));
+  }
+
+  // WLAN config
+  // webServer.sendContent_P(PSTR("wlan: "));
+  // webServer.sendContent_P(PSTR("ssid\':\'"));
+  // webServer.sendContent(wifidata.wifiSSID);
+  // webServer.sendContent_P(PSTR("\', status:\'"));
+  // if (WiFi.status() != WL_CONNECTED) {
+  //   webServer.sendContent(getWiFiState(lastWiFiStatus));
+  // } else {
+  //   webServer.sendContent_P(PSTR("IP "));
+  //   webServer.sendContent(WiFi.localIP().toString());
+  // }
+
   webServer.sendContent_P(PSTR("\"}"));
   webServer.sendContent("");
-  // Delay(100);
+  Delay(100);
   webServer.client().stop();
 }
 
+    // char urlBuf[32];
+    // IPAddress ip = webServer.client().localIP();
+    // snprintf(urlBuf, sizeof(urlBuf), "http://%u.%u.%u.%u", ip[0], ip[1], ip[2], ip[3]);
+
+
 void srv_handle_modes_js() {
-  DEBUG(" modes.js requested");
+  DEBUG(" modes.js ");
   webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
   webServer.send(200, "application/javascript", "");
 
@@ -524,128 +555,7 @@ const char* vars_setup() {
            wifidata.wifiSSID_Ap);
   return buf;
 }
-//  SN:30, // lamp.getLength(),
-//  SP:4, // lamp.getPin(),
-//  Tm:"12:35",	 //  char buf[] = "hh:mm"; now.toString(buf);
-//  T1:"07:30",
-//  T2:"22:30",
-// String wifiInfo_Page_setup() {
-//   String page;
-//   if (webServer.client().localIP() == WIFI_AP_IP) {
-//     page += String(F("<p>through the soft AP:<br/>")) + wifidata.wifiSSID_Ap + F("</p>");
-//   } else {
-//     page += String(F("<p>through the wifi network:<br/>")) + wifidata.wifiSSID + F("</p>\r\n<br/>");
-//   }
-//   if (lampState != STATE_RUNNING_STA) {
-//     page += String(F("<table><tr><th>SoftAP config</th></tr><tr><td><i>SSID</i> ")) + String(wifidata.wifiSSID_Ap) + F("</td></tr><tr><td><i>IP</i> ") + WiFi.softAPIP().toString() + F("</td></tr></table>\r\n<br />");
-//   }
-//   page += String(F("<table><tr><th>WLAN config</th></tr><tr><td>SSID ")) + String(wifidata.wifiSSID) + F("</td></tr><tr><td>") + ((WiFi.status() != WL_CONNECTED) ? getWiFiStateString(lastWiFiStatus) : F("IP ") + WiFi.localIP().toString()) + F("</td></tr></table>");
-//   return page;
-// }
-// String allModes_Page_setup() {
-//   String page;
-//   uint8_t num_modes = lamp.getModeCount();
-//   for (uint8_t i = 0; i < num_modes - MAX_CUSTOM_MODES; i++) {
-//     page += "\n<li>";
-//     page += lamp.getModeName(i);
-//     page += "</li>";
-//   }
-//   return page;
-// }
-// String monoModes_Page_setup() {
-//   String page;
-//   uint8_t num_modes = sizeof(monoModes);
-//   for (uint8_t i = 0; i < num_modes; i++) {
-//     page += "\n<li>";
-//     page += lamp.getModeName(monoModes[i]);
-//     page += "</li>";
-//   }
-//   return page;
-// }
-// String duoModes_Page_setup() {
-//   String page;
-//   uint8_t num_modes = sizeof(duoModes);
-//   for (uint8_t i = 0; i < num_modes; i++) {
-//     page += "\n<li>";
-//     page += lamp.getModeName(duoModes[i]);
-//     page += "</li>";
-//   }
-//   return page;
-// }
-// String rgbModes_Page_setup() {
-//   String page;
-//   uint8_t num_modes = sizeof(rgbModes);
-//   for (uint8_t i = 0; i < num_modes; i++) {
-//     page += "\n<li>";
-//     page += lamp.getModeName(rgbModes[i]);
-//     page += "</li>";
-//   }
-//   return page;
-// }
-// String specModes_Page_setup() {
-//   String page;
-//   uint8_t num_modes = sizeof(specModes);
-//   for (uint8_t i = 0; i < num_modes; i++) {
-//     page += "\n<li>";
-//     page += lamp.getModeName(specModes[i]);
-//     page += "</li>";
-//   }
-//   return page;
-// }
-// String param_Page_setup() {
-//   //{'of':1, 'br':64, 'ds':1000, 'ap':0, 'pt':60, 'dr':'r', 'sz':6, 'fd':48 }
-//   String page;
-//   page += "{of:";
-//   page += lamp.isRunning() ? "1" : "0";
-//   page += ", br:" + String(param.BRI);
-//   page += ", ds:" + String(param.SPEED);
-//   page += ", ap:" + String(param.PLAYMODE);
-//   page += ", at:" + String(param.PLAYTIME);
-//   page += ", dr:" + String((((param.OPTION & REVERSE) == REVERSE) ? "'r'" : "'d'"));
-//   page += ", sz:" + String(param.OPTION & SIZE_XLARGE);
-//   page += ", fd:" + String(param.OPTION & FADE_GLACIAL);
-//   page += "}";
-//   return page;
-// }
-
-// String about_Page_setup() {
-//   String page;
-//   //  page += String(F("<p> Let's talk about!</p><p>Thank for using my lovely MoodLineLamp!</p><p>Thank for using my lovely MoodLineLamp!</p>"));
-//   page = String(F(MNP_ABOUTCONTENT));
-
-// #if !defined(WS2812FX_MNP_EDITION_h)
-//   page += String(F("<p>!!! Designed for WS2812FX_MNP_EDITION lib !!!</p><p>Please download <a href='https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition'>Mood&Party Lights WS2812FX Lib</a></p>"));
-// #endif
-
-//   return page;
-// }
-
-// boolean captivePortal() {
-//   IPAddress hAddr, cAddr;
-//   cAddr = webServer.client().localIP();
-//   if (!cAddr.isSet()) {
-//     return true;
-//   }
-//   if (hAddr.fromString(webServer.hostHeader()) && hAddr == cAddr) {
-//     return false;
-//   }
-//   return false;
-// }
-/** Redirect to captive portal if we got a request for another domain. Return true in that case so the page handler do not try to handle the request again. */
-// boolean captivePortal() {
-//   if (!isIp(webServer.hostHeader())) {
-//     char urlBuf[64];
-//     IPAddress ip = webServer.client().localIP();
-//     snprintf(urlBuf, sizeof(urlBuf), "http://%u.%u.%u.%u", ip[0], ip[1], ip[2], ip[3]);
-//     webServer.sendHeader("Location", urlBuf, true);
-//     DEBUG2N("Request captive: ", urlBuf);
-//     // Send 302 redirect with empty body
-//     webServer.send(302, "text/plain", "");
-//     webServer.client().stop();  // close socket since no content length
-//     return true;
-//   }
-//   return false;
-// }
+//
 bool captivePortal() {
   const char* host = webServer.hostHeader().c_str();
   if (!isIp(host)) {
