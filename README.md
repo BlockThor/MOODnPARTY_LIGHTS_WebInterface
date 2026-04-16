@@ -45,13 +45,13 @@ No special software required. The lights to be controlled through web browser on
 ## ToDo
 
 - [x] Add parameters tab to change pin, number of leds, type of leds, name and password of AP, etc.
-- [ ] Light / Dark color schemes.
+- [x] Load time from device, Time to Switch On/Off
+- [ ] Timer to switch off
+
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
+- [ ] Light / Dark color schemes.
 - [ ] Presets (samething like Halloween, Circus Combustus, etc)
 - [ ] Custom presets (set of Mode/Submode/Colors(palette)/Speed/Bri/ElementSize/FadeRate)
-- [ ] Timer to switch off
-- [ ] Load time from I-net, Time to Switch On/Off
-
 ## PS
 
 > [!TIP]
