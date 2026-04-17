@@ -25,7 +25,7 @@ char index_html[] PROGMEM = R"EOF(
 <button class="tablinks" onclick="openTab(event, 'Controls')">Controls</button>
 <button class="tablinks last" onclick="openTab(event, 'About')">About</button>
 <button class="tablinks last" onclick="openTab(event, 'Settings')">Settings</button>
-<button class="tablinks last" onclick="openTab(event, 'WiFi')">WiFi</button>
+<button class="tablinks last" onclick="openTab(event, 'WiFi')" id="wifi">WiFi</button>
 <button class="tablinks last" onclick="openTab(event, 'GEM')" id="gem">&#x1F48E</button>
 </div>
 
@@ -158,25 +158,6 @@ Next mode every <span>
   <span class="txt">Time Off
   <input type="time" id="time-out" value="23:30" onchange="sendTimers()">
   </span>
-  <!-- <input type="button" name="sb" value="Save" onclick="sendCmd('st')"> -->
-</div></div>  
-<div class='flex-col'>                                                       
-<div class='form'>                                                           
-<h4>Additional parameters</h4>                                               
-Direction<span>                                                              
-<label><input type="radio" name="dr" value="r" onchange="sendVal(event, this)"><div>Reversed</div></label>
-<label><input type="radio" name="dr" value="d" onchange="sendVal(event, this)"><div>Direct</div></label></span>
-ELEMENT_SIZE<span>                                                           
-<label><input type="radio" name="sz" value='0' onchange="sendVal(event, this)"><div>Small</div></label>
-<label><input type="radio" name="sz" value='2' onchange="sendVal(event, this)"><div>Med</div></label>
-<label><input type="radio" name="sz" value='4' onchange="sendVal(event, this)"><div>Large</div></label>
-<label><input type="radio" name="sz" value='6' onchange="sendVal(event, this)"><div>XL</div></label></span>
-FADE_RATE<span>                                                              
-<label><input type="radio" name="fd" value= '16' onchange="sendVal(event, this)"><div>Faster</div></label>
-<label><input type="radio" name="fd" value= '48' onchange="sendVal(event, this)"><div>Fast</div></label>
-<label><input type="radio" name="fd" value= '64' onchange="sendVal(event, this)"><div>Med</div></label>
-<label><input type="radio" name="fd" value= '80' onchange="sendVal(event, this)"><div>Slow</div></label>
-<label><input type="radio" name="fd" value= '112' onchange="sendVal(event, this)"><div>Slower</div></label></span>
 </div></div>
 </div></div>
 
@@ -233,6 +214,24 @@ FADE_RATE<span>
 <button type='reset'>Reset</button>
 <input type='button' name='sb' value='Save' onclick="sendCmd('sst')"/>
 </form></div>
+<div class='flex-col'>                                                       
+<div class='form'>                                                           
+<h4>Software</h4>                                               
+  Direction<span>                                                              
+  <label><input type="radio" name="dr" value="r" onchange="sendVal(event, this)"><div>Reversed</div></label>
+  <label><input type="radio" name="dr" value="d" onchange="sendVal(event, this)"><div>Direct</div></label></span>
+  ELEMENT_SIZE<span>                                                           
+  <label><input type="radio" name="sz" value='0' onchange="sendVal(event, this)"><div>Small</div></label>
+  <label><input type="radio" name="sz" value='2' onchange="sendVal(event, this)"><div>Med</div></label>
+  <label><input type="radio" name="sz" value='4' onchange="sendVal(event, this)"><div>Large</div></label>
+  <label><input type="radio" name="sz" value='6' onchange="sendVal(event, this)"><div>XL</div></label></span>
+    FADE_RATE<span>                                                              
+  <label><input type="radio" name="fd" value= '16' onchange="sendVal(event, this)"><div>Faster</div></label>
+  <label><input type="radio" name="fd" value= '48' onchange="sendVal(event, this)"><div>Fast</div></label>
+  <label><input type="radio" name="fd" value= '64' onchange="sendVal(event, this)"><div>Med</div></label>
+  <label><input type="radio" name="fd" value= '80' onchange="sendVal(event, this)"><div>Slow</div></label>
+  <label><input type="radio" name="fd" value= '112' onchange="sendVal(event, this)"><div>Slower</div></label></span>
+</div></div>
 <div class='flex-col'>
 <form class='form' id="apsave">
 <h4>Self WiFi (SP)</h4>

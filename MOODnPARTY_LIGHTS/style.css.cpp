@@ -241,7 +241,7 @@ float: left;
 cursor: pointer;
 transition: 0.5s;
 }
-#gem{
+  #gem, #wifi{
 visibility: hidden;
 min-width: 1rem;
 }

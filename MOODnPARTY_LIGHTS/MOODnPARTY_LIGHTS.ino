@@ -9,7 +9,7 @@
 
 #include "defs.h"
 
-WS2812FX lamp = WS2812FX(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+WS2812FX lamp = WS2812FX(LED_COUNT, LED_PIN, LED_TYPE);
 RTC_Millis rtc;
 
 void setup() {
