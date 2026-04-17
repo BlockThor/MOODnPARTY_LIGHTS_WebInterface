@@ -203,12 +203,40 @@ Next mode every <span>
 </span>
 <span class="txt">Type of LEDs
 <select name="st" onchange="sendVal(event, this)">
-  <option value="6">NEO_RGB</option>
-  <option value="9">NEO_RBG</option>
-  <option value="82" selected>NEO_GRB</option>
-  <option value="161">NEO_GBR</option>
-  <option value="88">NEO_BRG</option>
-  <option value="164">NEO_BGR</option>
+<option value='6'>NEO_RGB</option>
+<option value='9'>NEO_RBG</option>
+<option value='82' selected>NEO_GRB</option>
+<option value='161'>NEO_GBR</option>
+<option value='88'>NEO_BRG</option>
+<option value='164'>NEO_BGR</option>
+
+<option value='27'>NEO_WRGB</option>
+<option value='30'>NEO_WRBG</option>
+<option value='39'>NEO_WGRB</option>
+<option value='54'>NEO_WGBR</option>
+<option value='45'>NEO_WBRG</option>
+<option value='57'>NEO_WBGR</option>
+
+<option value='75'>NEO_RWGB</option>
+<option value='78'>NEO_RWBG</option>
+<option value='135'>NEO_RGWB</option>
+<option value='198'>NEO_RGBW</option>
+<option value='141'>NEO_RBWG</option>
+<option value='201'>NEO_RBGW</option>
+
+<option value='99'>NEO_GWRB</option>
+<option value='114'>NEO_GWBR</option>
+<option value='147'>NEO_GRWB</option>
+<option value='210'>NEO_GRBW</option>
+<option value='177'>NEO_GBWR</option>
+<option value='225'>NEO_GBRW</option>
+
+<option value='108'>NEO_BWRG</option>
+<option value='120'>NEO_BWGR</option>
+<option value='156'>NEO_BRWG</option>
+<option value='216'>NEO_BRGW</option>
+<option value='180'>NEO_BGWR</option>
+<option value='228'>NEO_BGRW</option>
 </select>
 </span>
 <button type='reset'>Reset</button>

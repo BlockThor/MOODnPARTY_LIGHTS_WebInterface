@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 4)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 5)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -154,6 +154,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *    0.5.2 - Remove 'String' from use, autosync time
  *    0.5.3 - Fix WiFiInfo
  *    0.5.4 - Move additional params to Settings Tab (rename: Sofware), hide WiFi tab (temp not in use)
+ *    0.5.5 - Add support for RGBW LEDs
  */
 
 #if DEBUGING
