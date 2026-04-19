@@ -1,11 +1,11 @@
 
-uint32_t storeColors[3];// = {BLUE, BLACK, RED};
+uint32_t storeColors[3];  // = {BLUE, BLACK, RED};
 
 void applyParameters() {
   lamp.setPin(param.LEDPIN);
   lamp.setLength(param.LEDCOUNT);
   lamp.updateType(param.LEDTYPE);
-  lamp.setMode(param.MODE);//FX_MODE_STATIC
+  lamp.setMode(param.MODE);  //FX_MODE_STATIC
   setColorMode(param.COLORMODE);
   lamp.setColors(0, storeColors);
   lamp.setSpeed(param.SPEED);
@@ -33,17 +33,17 @@ void setColorMode(uint8_t colorMode) {
     storeColors[1] = param.COLOR1;
     storeColors[2] = param.COLOR1;
   } else {
-    // future modes? 
+    // future modes?
   }
   lamp.setColors(0, storeColors);
 }
 
 void checkAutoPlay() {
   unsigned long now = millis();
-  
+
   if (now < auto_last_change) auto_last_change = now;
-  if (param.PLAYMODE > 0 && (now - auto_last_change > (param.PLAYTIME * 1000))) { // cycle effect mode every 'param.PLAYTIME' seconds
-//    DEBUGN("Time to Autoplay");
+  if (param.PLAYMODE > 0 && (now - auto_last_change > (param.PLAYTIME * 1000))) {  // cycle effect mode every 'param.PLAYTIME' seconds
+                                                                                   //    DEBUGN("Time to Autoplay");
     uint8_t num_modes;
     uint8_t prevMode = lamp.getMode();
     switch (param.PLAYMODE) {
@@ -51,17 +51,18 @@ void checkAutoPlay() {
         playMode++;
         num_modes = sizeof(monoModes) + sizeof(duoModes) + sizeof(rgbModes);
         playMode %= num_modes;
-        if (playMode > (sizeof(monoModes) + sizeof(duoModes))) { // random All is RGBMode
+        if (playMode > (sizeof(monoModes) + sizeof(duoModes))) {  // random All is RGBMode
           lamp.setMode(rgbModes[playMode - (sizeof(monoModes) + sizeof(duoModes))]);
           setColorMode(COLORMODE_RGB);
-        } else if (playMode > sizeof(monoModes)) { // random All is DuoMode
+        } else if (playMode > sizeof(monoModes)) {  // random All is DuoMode
           lamp.setMode(duoModes[playMode - sizeof(monoModes)]);
           setColorMode(COLORMODE_DUO);
-        } else { // random All is MonoMode
+        } else {  // random All is MonoMode
           lamp.setMode(monoModes[playMode]);
           setColorMode(COLORMODE_MONO);
         }
-        DEBUG2("AllPlayMode: #", playMode); DEBUG2N(" - ", lamp.getModeName(lamp.getMode()));
+        DEBUG2("AllPlayMode: #", playMode);
+        DEBUG2N(" - ", lamp.getModeName(lamp.getMode()));
         break;
 
       case P_MONO:
@@ -102,22 +103,25 @@ void checkAutoPlay() {
 
       case P_ALL_RANDOM:
         num_modes = sizeof(monoModes) + sizeof(duoModes) + sizeof(rgbModes);
-        playMode = random(num_modes);//lamp.random8(num_modes);
-        DEBUG2N("RandPlayMode: #", playMode);        
-//        DEBUG2("ms: #", sizeof(monoModes)); DEBUG2(" | ds: #", sizeof(monoModes)); DEBUG2(" | rs: #", sizeof(rgbModes)); DEBUG2N(" | Ttl: #", num_modes);
+        playMode = random(num_modes);  //lamp.random8(num_modes);
+        DEBUG2("RandPlayMode: #", playMode);
+        //        DEBUG2("ms: #", sizeof(monoModes)); DEBUG2(" | ds: #", sizeof(monoModes)); DEBUG2(" | rs: #", sizeof(rgbModes)); DEBUG2N(" | Ttl: #", num_modes);
         num_modes = sizeof(monoModes) + sizeof(duoModes) + sizeof(rgbModes);
-        if (playMode > (sizeof(monoModes) + sizeof(duoModes))) { // random All is RGBMode
+        if (playMode > (sizeof(monoModes) + sizeof(duoModes))) {  // random All is RGBMode
           lamp.setMode(rgbModes[playMode - (sizeof(monoModes) + sizeof(duoModes))]);
-          DEBUG2("RGB: #", playMode - (sizeof(monoModes) + sizeof(duoModes))); DEBUG2(" - mode: ", lamp.getModeName(lamp.getMode()));
+          DEBUG2(" RGB: #", playMode - (sizeof(monoModes) + sizeof(duoModes)));
+          DEBUG2N(" - mode: ", lamp.getModeName(lamp.getMode()));
           setColorMode(COLORMODE_RGB);
-        } else if (playMode > sizeof(monoModes)) { // random All is DuoMode
+        } else if (playMode > sizeof(monoModes)) {  // random All is DuoMode
           lamp.setMode(duoModes[playMode - sizeof(monoModes)]);
           setColorMode(COLORMODE_DUO);
-          DEBUG2("DUO: #", playMode - sizeof(monoModes)); DEBUG2N(" - mode: ", lamp.getModeName(lamp.getMode()));
-        } else { // random All is MonoMode
+          DEBUG2(" DUO: #", playMode - sizeof(monoModes));
+          DEBUG2N(" - mode: ", lamp.getModeName(lamp.getMode()));
+        } else {  // random All is MonoMode
           lamp.setMode(monoModes[playMode]);
           setColorMode(COLORMODE_MONO);
-          DEBUG2("MONO: #", playMode); DEBUG2N(" - mode: ", lamp.getModeName(lamp.getMode()));
+          DEBUG2(" MONO: #", playMode);
+          DEBUG2N(" - mode: ", lamp.getModeName(lamp.getMode()));
         }
         break;
 
@@ -141,7 +145,7 @@ void checkAutoPlay() {
         setColorMode(COLORMODE_RGB);
         DEBUG2N("Auto R RGBMode: ", lamp.getModeName(lamp.getMode()));
         break;
-        
+
         //      default:
     }
     auto_last_change = now;

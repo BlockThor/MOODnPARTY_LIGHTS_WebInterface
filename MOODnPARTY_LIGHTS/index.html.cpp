@@ -159,6 +159,17 @@ Next mode every <span>
   <input type="time" id="time-out" value="23:30" onchange="sendTimers()">
   </span>
 </div></div>
+
+<div class="flex-col">
+<div class="form">
+  <h4>WiFi On/Off</h4>
+  <span class="txt">Timer for off (min)
+<input type="number" id="wifi-off" name="wf" value='10' min='5' max="1024" onchange="sendTimers()">
+  </span>
+  <span class="txt">Time On
+  <input type="time" id="wifi-on" value="17:30" onchange="sendTimers()">
+  </span>
+</div></div>  
 </div></div>
 
 <div id="WiFi" class="tabcontent">

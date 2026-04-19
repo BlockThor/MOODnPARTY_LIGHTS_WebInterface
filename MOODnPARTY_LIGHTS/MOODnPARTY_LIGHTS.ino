@@ -24,6 +24,8 @@ void setup() {
     ;  // wait for serial port to connect. Needed for native USB
 #endif
 
+  DEBUGN("\n\n - = = = -");
+  DEBUG2N("ver: ",MNPL_VERSION);
   //  -= = = = = =  SETUP LAMP  = = = = = =-
   DEBUGN("WS2812FX setup");
   lamp.init();
@@ -42,7 +44,7 @@ void setup() {
   lamp.start();
   DEBUGN("Lamp Start");
   lamp.service();
-  DEBUGN("First Lamp Service");
+  // DEBUGN("First Lamp Service");
 
   //  -= = = = = =  SETUP WIFI  = = = = = =-
   loadCredentials();
@@ -53,8 +55,9 @@ void setup() {
     setLampState(STATE_START_AP_STA);
   }
 
-  DEBUGN("Setup File: \n - == -");
-  Serial.println(vars_setup());
+  lastHeartbeat = now;
+  // DEBUGN("Setup File: \n - == -");
+  // Serial.println(vars_setup());
 }
 
 void loop() {

@@ -17,6 +17,8 @@ const LampParameters paramsDefault = {
   0,               // additional flags
   192844800,       // TimeOn 18:00
   192861000,       // TimeOff 22:30
+  192844800,       // WiFiOn 18:00
+  10,              // WiFiOff 10 min
 };
 
 
@@ -24,8 +26,8 @@ const LampParameters paramsDefault = {
 void runLEDs() {
   checkAutoPlay();
   // lamp.service();
-  static unsigned long lastUpdate = 0; //Throttle LED updates
-  if (millis() - lastUpdate > 20) {  // 20 ms = 50 Hz
+  static unsigned long lastUpdate = 0;  //Throttle LED updates
+  if (millis() - lastUpdate > 20) {     // 20 ms = 50 Hz
     lamp.service();
     lastUpdate = millis();
   }
@@ -33,27 +35,31 @@ void runLEDs() {
 
 // - - - - - - Lamp State - - - - - -
 void setLampState(State s) {
+  DEBUG2("Status was:", getNameLampState(getLampState()));
   lampState = s;
-  DEBUG2N("Status set:", getLampState(s));
+  DEBUG2N(" set:", getNameLampState(getLampState()));
 }
 State getLampState() {
   return lampState;
 }
 
 const char* const LAMP_STATE[] PROGMEM{
-  "STATE_START_AP_ONLY",
-  "STATE_START_AP_STA",
-  "STATE_SWITCH_TO_STA",
-  "STATE_RUNNING_AP",
-  "STATE_RUNNING_AP_STA",
-  "STATE_RUNNING_STA",
-  "STATE_RESET",
-  "STATE_ERROR"
+  "S_START_AP_ONLY",
+  "S_START_AP_STA",
+  "S_SWITCH_TO_STA",
+  "S_RUNNING_AP",
+  "S_RUNNING_AP_STA",
+  "S_RUNNING_STA",
+  "S_STOP_WIFI",
+  "S_RUNNING_NOWIFI",
+  "S_RESET",
+  "S_ERROR",
+  "S_MAX_VALUE"
 };
 
-const char* getLampState(State s) {
+const char* getNameLampState(State s) {
 #ifdef DEBUGING
-  if (s <= 7) {
+  if (s <= 9) {
     return LAMP_STATE[s];
   }
   return LAMP_STATE[STATE_MAX_VALUE];  // fallback

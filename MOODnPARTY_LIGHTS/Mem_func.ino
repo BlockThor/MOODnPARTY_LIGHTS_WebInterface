@@ -7,15 +7,15 @@ void saveCredentials() {
 void loadCredentials() {
   EEPROM.get(0, wifidata);
   if (wifidata.wifiSSID[0] == '\0') {
-    DEBUGN("No WiFi data stored");
+    // DEBUGN("No WiFi data stored");
   } else {
-    DEBUG2("Recovered SSID:", wifidata.wifiSSID);
+    DEBUG2("Loaded SSID:", wifidata.wifiSSID);
     DEBUG2N(" Pass:", strlen(wifidata.wifiPass) > 0 ? F("********") : F("<no password>"));
   }
   if (wifidata.wifiSSID_Ap[0] == '\0') {
     DEBUGN("No ApWiFi data stored");
   } else {
-    DEBUG2("Recovered SSID_Ap:", wifidata.wifiSSID_Ap);
+    DEBUG2("Loaded SSID_Ap:", wifidata.wifiSSID_Ap);
     DEBUG2N(" Ap Pass:", strlen(wifidata.wifiPass_Ap) > 0 ? F("********") : F("<no password>"));
   }
 }
@@ -34,7 +34,7 @@ void loadParameters() {
   DEBUGN("Load parameters");
   uint8_t addr = sizeof(wifidata) + 2;
   EEPROM.get(addr, param);
-  DEBUG2N("Loaded.  Last addr:", addr);
+  // DEBUG2N("Loaded.  Last addr:", addr);
   DEBUG2N("MAGIC:\tHx", param.MAGIC);
   DEBUG2XN("COLOR0:\tHx", param.COLOR0);
   DEBUG2XN("COLOR1:\tHx", param.COLOR1);
@@ -51,8 +51,10 @@ void loadParameters() {
   DEBUG2N("pL_Type:\t", param.LEDTYPE);
   DEBUG2N("FADE:\t", ((param.OPTION) & FADE_GLACIAL));
   DEBUG2N("SIZE:\t", ((param.OPTION) & SIZE_XLARGE));
-  DEBUG2N("TimeOn:\t", DateTime(param.TIMEON).timestamp(DateTime::TIMESTAMP_FULL));
-  DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_FULL));
+  DEBUG2N("TimeOn:\t", DateTime(param.TIMEON).timestamp(DateTime::TIMESTAMP_TIME));
+  DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_TIME));
+  DEBUG2N("WiFiOn:\t", DateTime(param.WIFION).timestamp(DateTime::TIMESTAMP_TIME));
+  DEBUG2N("WiFiOff:\t", param.WIFIOFF);
 }
 
 /** Save Time to EEPROM */
@@ -80,7 +82,7 @@ void loadTime() {
 void initParameters() {
   memset(wifidata.wifiSSID, 0, sizeof(wifidata.wifiSSID) - 1);
   memset(wifidata.wifiPass, 0, sizeof(wifidata.wifiPass) - 1);
-  
+
   strncpy(wifidata.wifiSSID_Ap, WIFI_AP_SSID, sizeof(wifidata.wifiSSID_Ap) - 1);
   wifidata.wifiSSID_Ap[sizeof(wifidata.wifiSSID_Ap) - 1] = '\0';
 

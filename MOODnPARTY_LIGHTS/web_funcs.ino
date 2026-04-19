@@ -68,36 +68,6 @@ void srv_handle_sendapwifi() {
   loadCredentials();
 }
 
-// void srv_handle_wifiscan() {
-//   int8_t scanResult = 0;
-//   String Page;
-//   DEBUGN("Scan start");
-//   WiFi.scanNetworks(true);
-//   unsigned long startTimer = millis();
-//   while (scanResult = 0 && millis() - startTimer < TTC) {
-//     scanResult = WiFi.scanComplete();
-//     Delay(100);
-//     DEBUG(".");
-//   }
-//   DEBUG("\n");
-
-//   Page = String(F("<table>"));
-//   if (scanResult > 0) {
-//     for (int i = 0; i < scanResult; i++) {
-//       if (i > 0 && WiFi.SSID(i) == WiFi.SSID(i - 1)) continue;  // if two WiFi are same name ignore
-//       Page += String(F("\r\n<tr><td>")) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : String(F("&#x1F512")));
-//       Page += String(F("</td><td><a name='")) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? 'O' : 'L');
-//       Page += String("' href='#n' onclick='f(this)'>") + WiFi.SSID(i) + F("</a></td></tr>");
-//     }
-//   } else {
-//     Page += F("\r\n<tr><td></td> <td>No WiFi found</td></tr>");
-//   }
-//   Page += F("<tr><td></td><td><small>(rescan if any missing)</small></td></tr></table>");
-
-//   DEBUG2N("Scan done: ", scanResult);
-//   webServer.send(200, "text/plain", Page);
-//   Page = "";
-// }
 void srv_handle_wifiscan() {
   DEBUGN("Scan start");
   WiFi.scanNetworks(true);  // async scan
@@ -172,17 +142,22 @@ void srv_handle_time() {
   }
 }
 void srv_handle_timer() {
-  DEBUGN("Rcv srv_handle_timer: ");
-  if (webServer.hasArg("on") && webServer.hasArg("off")) {
+  DEBUG2N("Rcv srv_handle_timer: ", webServer.args());
+  if (webServer.hasArg("on") && webServer.hasArg("off") && webServer.hasArg("won") && webServer.hasArg("woff")) {
 
     uint32_t onSec = strtoul(webServer.arg("on").c_str(), nullptr, 10);
     uint32_t offSec = strtoul(webServer.arg("off").c_str(), nullptr, 10);
-    DEBUGX("Auto on: %lu  off: %lu\n", onSec, offSec);
+    uint32_t wonSec = strtoul(webServer.arg("won").c_str(), nullptr, 10);
+    uint32_t woffMin = strtoul(webServer.arg("woff").c_str(), nullptr, 10);
+    DEBUGX("Auto on: %lu  off: %lu\n won: %lu  woff: %lu\n", onSec, offSec, wonSec, woffMin);
 
     param.TIMEON = onSec;
     param.TIMEOFF = offSec;
+    param.WIFION = wonSec;
+    param.WIFIOFF = woffMin;
     DEBUG2N("TimeOn:\t", DateTime(param.TIMEON).timestamp(DateTime::TIMESTAMP_FULL));
-    DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_FULL));
+    DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_TIME));
+    DEBUG2N("WiFiOn:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_TIME));
     saveParameters();
     webServer.send(200, "text/plain", "Ok");
   } else {
@@ -199,7 +174,8 @@ void srv_handle_not_found() {
 
 
 void srv_handle_index_html() {
-  DEBUG2N("Server header:", webServer.hostHeader());
+  // DEBUG2N("header:", webServer.header());
+  // DEBUG2N("Name:", webServer.headerName());
   if (captivePortal()) {  // If caprive portal redirect instead of displaying the page.
     return;
   }
@@ -220,63 +196,57 @@ void srv_handle_vars_js() {
   webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
   webServer.send(200, "application/javascript", "");
   webServer.sendContent_P(PSTR("const param="));
+  DEBUGN("const param=");
   webServer.sendContent(vars_setup());
+  DEBUG2N(": ", vars_setup());
+
   webServer.sendContent_P(PSTR("TT:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_TITLE);
   webServer.sendContent_P(PSTR("\","));
-
+  DEBUGN(MNP_TITLE);
+  
   webServer.sendContent_P(PSTR("HD:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_HEADER);
   webServer.sendContent_P(PSTR("\","));
+  DEBUGN(MNP_HEADER);
 
   webServer.sendContent_P(PSTR("FT:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_FOOTER);
   webServer.sendContent_P(PSTR("\","));
+  DEBUGN(MNP_FOOTER);
 
   webServer.sendContent_P(PSTR("AB:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_ABOUTCONTENT);
   webServer.sendContent_P(PSTR("\","));
+  DEBUGN(MNP_ABOUTCONTENT);
 
   webServer.sendContent_P(PSTR("WR:"));
   webServer.sendContent_P(PSTR("\""));
   // webServer.sendContent_P(PSTR("<p>through the wifi network:<br>Oinoussian_3</p><br><table><tbody><tr><th>WLAN config</th></tr><tr><td>SSID OinoussianCrew</td></tr><tr><td>IP 1.2.3.4</td></tr></tbody></table>"));
-   // Connection type
-  if (webServer.client().localIP() == WIFI_AP_IP) {
-    webServer.sendContent_P(PSTR("connection:\'softAP\',<br>"));
-    webServer.sendContent_P(PSTR("ssid:\'"));
-    webServer.sendContent(wifidata.wifiSSID_Ap);
-    webServer.sendContent_P(PSTR("\'<br>"));
-  } else {
-    webServer.sendContent_P(PSTR("connection:\'station\'<br>"));
-    webServer.sendContent_P(PSTR("ssid:\'"));
-    webServer.sendContent(wifidata.wifiSSID);
-    webServer.sendContent_P(PSTR("\'<br>"));
-  }
-
-  // SoftAP config if not running STA
-  if (lampState != STATE_RUNNING_STA) {
-    // webServer.sendContent_P(PSTR("\"softap\":{"));
-    webServer.sendContent_P(PSTR("ssid:\'"));
-    webServer.sendContent(wifidata.wifiSSID_Ap);
-    webServer.sendContent_P(PSTR("\', ip:\'"));
-    webServer.sendContent(WiFi.softAPIP().toString());
-    webServer.sendContent_P(PSTR("\'"));
-  }
-
-  // WLAN config
-  // webServer.sendContent_P(PSTR("wlan: "));
-  // webServer.sendContent_P(PSTR("ssid\':\'"));
-  // webServer.sendContent(wifidata.wifiSSID);
-  // webServer.sendContent_P(PSTR("\', status:\'"));
-  // if (WiFi.status() != WL_CONNECTED) {
-  //   webServer.sendContent(getWiFiState(lastWiFiStatus));
+  // Connection type
+  // if (webServer.client().localIP() == WIFI_AP_IP) {
+  //   webServer.sendContent_P(PSTR("connection:\'softAP\',<br>"));
+  //   webServer.sendContent_P(PSTR("ssid:\'"));
+  //   webServer.sendContent(wifidata.wifiSSID_Ap);
+  //   webServer.sendContent_P(PSTR("\'<br>"));
   // } else {
-  //   webServer.sendContent_P(PSTR("IP "));
-  //   webServer.sendContent(WiFi.localIP().toString());
+  //   webServer.sendContent_P(PSTR("connection:\'station\'<br>"));
+  //   webServer.sendContent_P(PSTR("ssid:\'"));
+  //   webServer.sendContent(wifidata.wifiSSID);
+  //   webServer.sendContent_P(PSTR("\'<br>"));
+  // }
+
+  // // SoftAP config if not running STA
+  // if (lampState != STATE_RUNNING_STA) {
+  //   webServer.sendContent_P(PSTR("ssid:\'"));
+  //   webServer.sendContent(wifidata.wifiSSID_Ap);
+  //   webServer.sendContent_P(PSTR("\', ip:\'"));
+  //   webServer.sendContent(WiFi.softAPIP().toString());
+  //   webServer.sendContent_P(PSTR("\'"));
   // }
 
   webServer.sendContent_P(PSTR("\"}"));
@@ -285,9 +255,9 @@ void srv_handle_vars_js() {
   webServer.client().stop();
 }
 
-    // char urlBuf[32];
-    // IPAddress ip = webServer.client().localIP();
-    // snprintf(urlBuf, sizeof(urlBuf), "http://%u.%u.%u.%u", ip[0], ip[1], ip[2], ip[3]);
+// char urlBuf[32];
+// IPAddress ip = webServer.client().localIP();
+// snprintf(urlBuf, sizeof(urlBuf), "http://%u.%u.%u.%u", ip[0], ip[1], ip[2], ip[3]);
 
 
 void srv_handle_modes_js() {
@@ -518,15 +488,18 @@ void srv_handle_set() {
 
 // - - - - - - PAGE SETUPS - - - - - -
 const char* vars_setup() {
-  static char buf[300];  // static so it persists after function returns
+  static char buf[400];  // static so it persists after function returns
   DateTime tOn = DateTime(param.TIMEON);
   DateTime tOff = DateTime(param.TIMEOFF);
+  DateTime tWOn = DateTime(param.WIFION);
   char bufT0[6] = "hh:mm";
   now.toString(bufT0);
   char bufT1[6] = "hh:mm";
   tOn.toString(bufT1);
   char bufT2[6] = "hh:mm";
   tOff.toString(bufT2);
+  char bufW1[6] = "hh:mm";
+  tWOn.toString(bufW1);
   char hexcol0[7];
   sprintf(hexcol0, "%06x", param.COLOR0);
   char hexcol1[7];
@@ -535,7 +508,7 @@ const char* vars_setup() {
   sprintf(hexcol2, "%06x", param.COLOR2);
   snprintf(buf, sizeof(buf),
            "{of:%d, br:%u, ds:%u, ap:%u, at:%u, dr:'%c', sz:%u, fd:%u, SN:%u, SP:%u, "
-           "Tm:\"%s\", T1:\"%s\", T2:\"%s\", C0:\"#%s\", C1:\"#%s\", C2:\"#%s\", AN:\"%s\",",
+           "Tm:\"%s\", T1:\"%s\", T2:\"%s\", W1:\"%s\", W2:%u, C0:\"#%s\", C1:\"#%s\", C2:\"#%s\", AN:\"%s\",",
            lamp.isRunning() ? 1 : 0,
            param.BRI,
            param.SPEED,
@@ -549,6 +522,8 @@ const char* vars_setup() {
            bufT0,
            bufT1,
            bufT2,
+           bufW1,
+           param.WIFIOFF,
            hexcol0,
            hexcol1,
            hexcol2,

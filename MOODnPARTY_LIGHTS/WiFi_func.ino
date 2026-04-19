@@ -1,4 +1,4 @@
-#define WIFI_AP_TIMEOUT 60000
+#define WIFI_AP_TIMEOUT 600000
 #define WIFI_AP_IP IPAddress(1, 2, 3, 4)
 #define WIFI_AP_SUBNET IPAddress(255, 255, 255, 0)
 //#define WIFI_DNS_PORT      (byte)53
@@ -18,6 +18,8 @@ void runWiFi() {
     case STATE_RUNNING_AP: runningAP(); break;
     case STATE_RUNNING_AP_STA: runningAPSTA(); break;
     case STATE_RUNNING_STA: runningSTA(); break;
+    case STATE_STOP_WIFI: stopWiFi(); break;
+    case STATE_RUNNING_NOWIFI: break;
     case STATE_RESET: ESP.reset(); break;
     default: enterError(); break;
   }
@@ -142,7 +144,12 @@ void startServer() {
   webServer.on("/cmd", HTTP_POST, srv_handle_cmd);
   webServer.on("/time", srv_handle_time);
   webServer.on("/timer", HTTP_PUT, srv_handle_timer);
-
+  webServer.on("/heartbeat", []() {
+    Serial.print("Heartbeat | ");
+    Serial.println(now.timestamp(DateTime::TIMESTAMP_TIME));
+    lastHeartbeat = now;
+    webServer.send(200, "text/plain", "OK");
+  });
   // webServer.on("/generate_204", srv_handle_index_html);  //Android captive portal. Maybe not needed. Might be handled by notFound handler.
   // webServer.on("/fwlink", srv_handle_index_html);  //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
   webServer.onNotFound(srv_handle_not_found);
@@ -166,6 +173,14 @@ void checkAPTimeout() {
     setLampState(STATE_SWITCH_TO_STA);
     DEBUGN("AP is Timeout!!!");
   }
+}
+
+void stopWiFi() {
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    Delay(100);
+    DEBUGN("WiFi disconn");
+    setLampState(STATE_RUNNING_NOWIFI);
 }
 
 void enterError() {

@@ -9,6 +9,11 @@ if (str.length === 1) return "0" + str;
 else return str;
 };
 
+setInterval(() => {
+  fetch('/heartbeat');
+}, 5000);
+
+
 document.addEventListener('DOMContentLoaded', () => {
 document.title = param.TT;
 document.getElementById("HD").insertAdjacentHTML("afterbegin", param.HD);
@@ -16,6 +21,8 @@ document.getElementById("color0").value = param.C0;
 document.getElementById("color2").value = param.C2;
 document.getElementById("time-in").value = param.T1;
 document.getElementById("time-out").value = param.T2;
+document.getElementById("wifi-on").value = param.W1;
+document.getElementById("wifi-off").value = param.W2;
 document.getElementById("AN").value = param.AN;
 document.getElementById("SN").value = param.SN;
 document.getElementById("SP").value = param.SP;
@@ -211,6 +218,8 @@ function sendTimers() {
 // Read HH:MM strings
 const inStr = document.getElementById('time-in').value;   // e.g. "07:30"
 const outStr = document.getElementById('time-out').value; // e.g. "23:30"
+const woffStr = document.getElementById('wifi-off').value; // e.g. "10"
+const wonStr = document.getElementById('wifi-on').value;   // e.g. "17:30"
 
 // Convert "HH:MM" to Unix timestamp for today
 function hhmmToUnix(hhmm) {
@@ -226,10 +235,11 @@ return Math.floor(now.getTime() / 1000) - now.getTimezoneOffset() * 60;
 
 const onUnix = hhmmToUnix(inStr);
 const offUnix = hhmmToUnix(outStr);
+const wonUnix = hhmmToUnix(wonStr);
 
-console.log('Send timers (Unix): on=', onUnix, 'off=', offUnix);
+console.log('Send timers (Unix): on=', onUnix, 'off=', offUnix, 'won=', wonUnix, 'woff=', woffStr);
 
-const body = 'on=' + encodeURIComponent(onUnix) + '&off=' + encodeURIComponent(offUnix);
+const body = 'on=' + encodeURIComponent(onUnix) + '&off=' + encodeURIComponent(offUnix) + '&won=' + encodeURIComponent(wonUnix) + '&woff=' + encodeURIComponent(woffStr);
 
 const xhttp = new XMLHttpRequest();
 xhttp.open('PUT', '/timer', true);

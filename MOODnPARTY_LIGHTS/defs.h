@@ -129,7 +129,7 @@ const uint8_t specModes[] =  {
 const uint8_t monoModes[] = {0, 1, 2, 3, 4, 5, 6, 13, 14, 15, 16, 18, 19, 21, 23, 24, 25, 26, 28, 30, 31, 34, 36, 37, 40, 43, 44, 48, 49, 50, 65, 66, 68, 70, 71 };
 const uint8_t duoModes[] =  {45, 53, 54, 55, 56, 57, 64 };
 const uint8_t rgbModes[] =  {7, 8, 9, 10, 11, 12, 17, 20, 22, 27, 29, 32, 33, 35, 38, 39, 42, 46, 56, 60, 62, 63, 67, 70 };
-const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
+const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61  };
 #endif
 
 
@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 5)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 6)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -155,6 +155,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61,  };
  *    0.5.3 - Fix WiFiInfo
  *    0.5.4 - Move additional params to Settings Tab (rename: Sofware), hide WiFi tab (temp not in use)
  *    0.5.5 - Add support for RGBW LEDs
+ *    0.5.6 - WiFi AP Timeout | WiFi AP Auto On 
  */
 
 #if DEBUGING
@@ -187,6 +188,7 @@ enum State {
   STATE_RUNNING_AP,
   STATE_RUNNING_AP_STA,
   STATE_RUNNING_STA,
+  STATE_STOP_WIFI,
   STATE_RUNNING_NOWIFI,
   STATE_RESET,
   STATE_ERROR,
@@ -230,6 +232,8 @@ struct LampParameters {
   uint8_t   FLAGS;
   uint32_t  TIMEON;
   uint32_t  TIMEOFF;
+  uint32_t WIFION;
+  uint16_t WIFIOFF;
 } param;
 
 #define COLORMODE_MONO 1
@@ -254,3 +258,5 @@ unsigned long auto_last_change = 0;
 DateTime now;
 DateTime timeOn;
 DateTime timeOff;
+DateTime wifiOn;
+DateTime lastHeartbeat;  // last recorded heartbeat time
