@@ -1,5 +1,5 @@
 [![Stargazers][stars-shield]][stars-url] [![Forks][forks-shield]][forks-url] [![Contributors][contributors-shield]][contributors-url]
-[![Issues][issues-shield]][issues-url] [![Code][code-shield]][code-url] [![MIT License][license-shield]][license-url] [![Instagram][instagram-shield]][instagram-url]
+[![Issues][issues-shield]][issues-url] [![Code][code-shileld]][code-url] [![MIT License][license-shield]][license-url] [![Instagram][instagram-shield]][instagram-url]
 
 <p align="center"> <img src="https://github.com/BlockThor/WS2812FX_MOODnPARTY_Edition/blob/main/WS2812FX_MnP_logo.png" align="center" width="500"/> </p>
 
@@ -53,7 +53,7 @@ No special software required. The lights to be controlled through web browser on
 
 - [x] Add parameters tab to change pin, number of LEDs, type of LEDs, name and password of AP, etc.
 - [x] Load time from device, Time to Switch On/Off
-- [ ] Timer to switch off
+- [x] Timer to switch off WiFi
 
 - [ ] Change DuoMode to PaletteMode (Maybe, not sure yet).
 - [ ] Light / Dark color schemes.
