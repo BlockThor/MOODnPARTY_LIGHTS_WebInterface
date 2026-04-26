@@ -1,4 +1,4 @@
-#define LED_PIN 2 // D4 on 
+#define LED_PIN 2  // D4 on
 #define LED_COUNT 60
 #define LED_TYPE NEO_GRB + NEO_KHZ800
 
@@ -10,11 +10,11 @@
 #define MNP_FOOTER "Vasyl Yudin 2023-2024, 2026"
 
 #define WIFI_AP_SSID "MOODLAMP"  // default AP WiFi Name
-#define WIFI_AP_PASS  "MOODLAMP" // default AP WiFi Password
+#define WIFI_AP_PASS "MOODLAMP"  // default AP WiFi Password
 #define HOSTNAME "moodlamp2"
-#define TTC 60000 // Time_To_Connect to WiFi
+#define TTC 60000  // Time_To_Connect to WiFi
 
-#define DEBUGING 1 // Switch debug output on and off by 1 or 0
+#define DEBUGING 1  // Switch debug output on and off by 1 or 0
 
 #if defined(WS2812FX_MNP_EDITION_h)
 const uint8_t monoModes[] = {
@@ -43,7 +43,7 @@ const uint8_t monoModes[] = {
   FX_MODE_FLYING_SPIRIT,
   FX_MODE_PORTAL
 };
-const uint8_t duoModes[] =  {
+const uint8_t duoModes[] = {
   FX_MODE_STATIC,
   FX_MODE_MOOD_CLICK,
   FX_MODE_BREATH,
@@ -68,9 +68,9 @@ const uint8_t duoModes[] =  {
   FX_MODE_FLYING_SPIRIT,
   FX_MODE_PORTAL
 };
-const uint8_t rgbModes[] =  {
+const uint8_t rgbModes[] = {
   FX_MODE_STATIC,
-  FX_MODE_MOOD_CLICK,  
+  FX_MODE_MOOD_CLICK,
   FX_MODE_MOOD_TRAIN,
   FX_MODE_MOOD_SHIFT,
   FX_MODE_MOOD_FLOW,
@@ -107,11 +107,11 @@ const uint8_t rgbModes[] =  {
   FX_MODE_PORTAL,
   FX_MODE_ROCKING
 };
-const uint8_t specModes[] =  {
+const uint8_t specModes[] = {
   FX_MODE_STROBE,
   FX_MODE_MULTI_STROBE,
   FX_MODE_PARTY_STROBE,
-  FX_MODE_ICU, 
+  FX_MODE_ICU,
   FX_MODE_RAINBOW_FIREWORKS,
   FX_MODE_FILLER_UP,
   FX_MODE_VU_METER,
@@ -129,7 +129,7 @@ const uint8_t specModes[] =  {
 const uint8_t monoModes[] = {0, 1, 2, 3, 4, 5, 6, 13, 14, 15, 16, 18, 19, 21, 23, 24, 25, 26, 28, 30, 31, 34, 36, 37, 40, 43, 44, 48, 49, 50, 65, 66, 68, 70, 71 };
 const uint8_t duoModes[] =  {45, 53, 54, 55, 56, 57, 64 };
 const uint8_t rgbModes[] =  {7, 8, 9, 10, 11, 12, 17, 20, 22, 27, 29, 32, 33, 35, 38, 39, 42, 46, 56, 60, 62, 63, 67, 70 };
-const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61  };
+const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61 };
 #endif
 
 
@@ -170,7 +170,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61  };
 #define DEBUG2XN(s,v) { Serial.print(F(s)); Serial.println(v, HEX); }
 #else
 // #ifndef DEBUGX
-#define DEBUGX(...)  
+#define DEBUGX(...)
 #define DEBUG(s)
 #define DEBUG2(s,v)
 // #define DEBUGV(v)
@@ -215,23 +215,23 @@ typedef enum {
 } MODES;
 
 struct LampParameters {
-  uint32_t  MAGIC;
-  uint32_t  COLOR0;
-  uint32_t  COLOR1;
-  uint32_t  COLOR2;
-  uint8_t   MODE;
-  uint8_t   COLORMODE;
-  uint16_t  SPEED;
-  uint8_t   OPTION;
-  uint8_t   BRI;
-  uint8_t   PLAYMODE;
-  uint16_t  PLAYTIME;
-  uint8_t   LEDPIN;
-  uint16_t  LEDCOUNT;
-  uint8_t   LEDTYPE;
-  uint8_t   FLAGS;
-  uint32_t  TIMEON;
-  uint32_t  TIMEOFF;
+  uint32_t MAGIC;
+  uint32_t COLOR0;
+  uint32_t COLOR1;
+  uint32_t COLOR2;
+  uint8_t MODE;
+  uint8_t COLORMODE;
+  uint16_t SPEED;
+  uint8_t OPTION;
+  uint8_t BRI;
+  uint8_t PLAYMODE;
+  uint16_t PLAYTIME;
+  uint8_t LEDPIN;
+  uint16_t LEDCOUNT;
+  uint8_t LEDTYPE;
+  uint8_t FLAGS;
+  uint32_t TIMEON;
+  uint32_t TIMEOFF;
   uint32_t WIFION;
   uint16_t WIFIOFF;
 } param;
@@ -239,7 +239,7 @@ struct LampParameters {
 #define COLORMODE_MONO 1
 #define COLORMODE_DUO 2
 #define COLORMODE_RGB 3
-#define COLORMODE_PALETTE 4 // todo
+#define COLORMODE_PALETTE 4  // todo
 
 extern const char index_html[];
 extern const char main_js[];

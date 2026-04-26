@@ -205,7 +205,7 @@ void srv_handle_vars_js() {
   webServer.sendContent_P(MNP_TITLE);
   webServer.sendContent_P(PSTR("\","));
   DEBUGN(MNP_TITLE);
-  
+
   webServer.sendContent_P(PSTR("HD:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_HEADER);
@@ -221,7 +221,13 @@ void srv_handle_vars_js() {
   webServer.sendContent_P(PSTR("AB:"));
   webServer.sendContent_P(PSTR("\""));
   webServer.sendContent_P(MNP_ABOUTCONTENT);
-  webServer.sendContent_P(PSTR("\","));
+  webServer.sendContent_P(PSTR("<br>Current mode: \'"));
+  webServer.sendContent(lamp.getModeName(lamp.getMode()));
+  webServer.sendContent_P(PSTR("\'<br>Current ver.: \'"));
+  char buffer[16];  // enough space for "0x" + 8 hex digits + null terminator
+  sprintf(buffer, "0x%X", MNPL_VERSION);
+  webServer.sendContent(buffer);
+  webServer.sendContent_P(PSTR("\'<br>\","));
   DEBUGN(MNP_ABOUTCONTENT);
 
   webServer.sendContent_P(PSTR("WR:"));

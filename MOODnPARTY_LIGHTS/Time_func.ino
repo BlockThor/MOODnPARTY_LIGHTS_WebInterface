@@ -9,13 +9,15 @@ void runTime() {
   if (now.second() % 5 == 0) {
     if (!done) {
       Serial.print(now.timestamp(DateTime::TIMESTAMP_TIME));
-      Serial.print(" | ");
-      Serial.print(ESP.getFreeHeap());
       // DEBUG2N(" | WiFi status:", getWiFiState(WiFi.status()));
-      DEBUG2(" | Lamp status:", getNameLampState(getLampState()));
-      // Compare with timeout value
-      DEBUG2N(" |  elapsed:", elapsed.totalseconds() / 60);
+      DEBUG2(" | Lamp:", lamp.getModeName(lamp.getMode()));
+      DEBUG2(" | ", Serial.println(ESP.getFreeHeap()));
 
+      if (getLampState() != STATE_RUNNING_NOWIFI && elapsed.totalseconds() > 60) {
+        DEBUG2N(" |  elapsed:", elapsed.totalseconds() / 60);
+      } else {
+        DEBUG("/n");
+      }
       saveTime();
 
       if (ESP.getFreeHeap() < 30000) {
