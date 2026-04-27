@@ -471,8 +471,12 @@ void srv_handle_set() {
     // hardware
     if (strcmp(sName, "sn") == 0) {
       uint16_t p = atoi(sArg);
-      lamp.fill(0, 0, lamp.getLength());
+      lamp.stop();
+      lamp.strip_off();
       lamp.setLength(p);
+      lamp.stop();
+      lamp.setBrightness(param.BRI);
+      lamp.start();
     } else if (strcmp(sName, "sp") == 0) {
       lamp.setPin(atoi(sArg));
     } else if (strcmp(sName, "st") == 0) {
