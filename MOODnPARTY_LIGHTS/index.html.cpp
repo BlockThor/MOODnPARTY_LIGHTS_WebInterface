@@ -259,6 +259,9 @@ Next mode every <span>
   Direction<span>                                                              
   <label><input type="radio" name="dr" value="r" onchange="sendVal(event, this)"><div>Reversed</div></label>
   <label><input type="radio" name="dr" value="d" onchange="sendVal(event, this)"><div>Direct</div></label></span>
+  Split in two<span>                                                              
+  <label><input type="radio" name="sw" value="s" onchange="sendVal(event, this)"><div>Split</div></label>
+  <label><input type="radio" name="sw" value="n" onchange="sendVal(event, this)"><div>Solid</div></label></span>
   ELEMENT_SIZE<span>                                                           
   <label><input type="radio" name="sz" value='0' onchange="sendVal(event, this)"><div>Small</div></label>
   <label><input type="radio" name="sz" value='2' onchange="sendVal(event, this)"><div>Med</div></label>

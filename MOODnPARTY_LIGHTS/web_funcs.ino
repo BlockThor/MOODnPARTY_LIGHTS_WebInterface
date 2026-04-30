@@ -385,35 +385,35 @@ void srv_handle_set() {
     // modes
     if (strcmp(sName, "mn") == 0) {
       uint8_t tmp = atoi(sArg);
-      lamp.setMode(tmp);
+      lampSetMode(tmp);
       setColorMode(COLORMODE_DUO);
       param.MODE = lamp.getMode();
       param.COLORMODE = COLORMODE_DUO;
       param.PLAYMODE = P_NONE;
     } else if (strcmp(sName, "mm") == 0) {
       uint8_t tmp = atoi(sArg);
-      lamp.setMode(monoModes[tmp]);
+      lampSetMode(monoModes[tmp]);
       setColorMode(COLORMODE_MONO);
       param.MODE = lamp.getMode();
       param.COLORMODE = COLORMODE_MONO;
       param.PLAYMODE = P_NONE;
     } else if (strcmp(sName, "md") == 0) {
       uint8_t tmp = atoi(sArg);
-      lamp.setMode(duoModes[tmp]);
+      lampSetMode(duoModes[tmp]);
       setColorMode(COLORMODE_DUO);
       param.MODE = lamp.getMode();
       param.COLORMODE = COLORMODE_DUO;
       param.PLAYMODE = P_NONE;
     } else if (strcmp(sName, "mr") == 0) {
       uint8_t tmp = atoi(sArg);
-      lamp.setMode(rgbModes[tmp]);
+      lampSetMode(rgbModes[tmp]);
       setColorMode(COLORMODE_RGB);
       param.MODE = lamp.getMode();
       param.COLORMODE = COLORMODE_RGB;
       param.PLAYMODE = P_NONE;
     } else if (strcmp(sName, "ms") == 0) {
       uint8_t tmp = atoi(sArg);
-      lamp.setMode(specModes[tmp]);
+      lampSetMode(specModes[tmp]);
       setColorMode(COLORMODE_DUO);
       param.MODE = lamp.getMode();
       param.COLORMODE = COLORMODE_DUO;
@@ -434,9 +434,9 @@ void srv_handle_set() {
     }
     // speed
     else if (strcmp(sName, "ds") == 0) {
-      if (sArg[0] == '-') lamp.setSpeed(max(lamp.getSpeed(), 5) * 1.2);
-      else if (sArg[0] == ' ') lamp.setSpeed(lamp.getSpeed() * 0.8);
-      else lamp.setSpeed(atoi(sArg));
+      if (sArg[0] == '-') lampSetSpeed(max(lamp.getSpeed(), 5) * 1.2);
+      else if (sArg[0] == ' ') lampSetSpeed(lamp.getSpeed() * 0.8);
+      else lampSetSpeed(atoi(sArg));
       param.SPEED = lamp.getSpeed();
     }
     yield();
@@ -449,23 +449,27 @@ void srv_handle_set() {
       auto_last_change = 0;
     }
     // options
-    else if (strcmp(sName, "dr") == 0) {
+    else if (strcmp(sName, "dr") == 0) { // Direction
       uint8_t opts = lamp.getOptions(0);
-      if (sArg[0] == 'r') lamp.setOptions(0, opts | REVERSE);
-      else lamp.setOptions(0, opts & ~REVERSE);
-    } else if (strcmp(sName, "sz") == 0) {
+      if (sArg[0] == 'r') lampSetOptions(opts | REVERSE); // reversed
+      else lampSetOptions(opts & ~REVERSE);
+    } else if (strcmp(sName, "sw") == 0) { // Split in two
+      if (sArg[0] == 's') param.OPTION2 = 0x01;// split
+      if (sArg[0] == 'n') param.OPTION2 = 0x00;//  normal
+      applyParameters();
+    } else if (strcmp(sName, "sz") == 0) { // ELEMENT_SIZE
       uint8_t opts = lamp.getOptions(0);
       uint16_t p = atoi(sArg);
       opts &= ~SIZE_XLARGE;
       opts |= p;
-      lamp.setOptions(0, opts);
+      lampSetOptions(opts);
       lamp.resetSegmentRuntime(0);
-    } else if (strcmp(sName, "fd") == 0) {
+    } else if (strcmp(sName, "fd") == 0) { // FADE_RATE
       uint8_t opts = lamp.getOptions(0);
       uint16_t p = atoi(sArg);
       opts &= ~FADE_GLACIAL;
       opts |= p;
-      lamp.setOptions(0, opts);
+      lampSetOptions(opts);
     }
     yield();
     // hardware
@@ -517,7 +521,7 @@ const char* vars_setup() {
   char hexcol2[7];
   sprintf(hexcol2, "%06x", param.COLOR2);
   snprintf(buf, sizeof(buf),
-           "{of:%d, br:%u, ds:%u, ap:%u, at:%u, dr:'%c', sz:%u, fd:%u, SN:%u, SP:%u, "
+           "{of:%d, br:%u, ds:%u, ap:%u, at:%u, dr:'%c', sw:'%c', sz:%u, fd:%u, SN:%u, SP:%u, "
            "Tm:\"%s\", T1:\"%s\", T2:\"%s\", W1:\"%s\", W2:%u, C0:\"#%s\", C1:\"#%s\", C2:\"#%s\", AN:\"%s\",",
            lamp.isRunning() ? 1 : 0,
            param.BRI,
@@ -525,6 +529,7 @@ const char* vars_setup() {
            param.PLAYMODE,
            param.PLAYTIME,
            ((param.OPTION & REVERSE) == REVERSE) ? 'r' : 'd',
+           ((param.OPTION2 & MNP_SPLIT) == MNP_SPLIT) ? 's' : 'n',
            (param.OPTION & SIZE_XLARGE),
            (param.OPTION & FADE_GLACIAL),
            lamp.getLength(),

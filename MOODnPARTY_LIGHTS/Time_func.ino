@@ -9,14 +9,13 @@ void runTime() {
   if (now.second() % 5 == 0) {
     if (!done) {
       Serial.print(now.timestamp(DateTime::TIMESTAMP_TIME));
-      // DEBUG2N(" | WiFi status:", getWiFiState(WiFi.status()));
       DEBUG2(" | Lamp:", lamp.getModeName(lamp.getMode()));
-      DEBUG2(" | ", Serial.println(ESP.getFreeHeap()));
+      DEBUG2(" | ", ESP.getFreeHeap());
 
       if (getLampState() != STATE_RUNNING_NOWIFI && elapsed.totalseconds() > 60) {
         DEBUG2N(" |  elapsed:", elapsed.totalseconds() / 60);
       } else {
-        DEBUG("/n");
+        DEBUGN(" ");
       }
       saveTime();
 
@@ -88,6 +87,7 @@ bool isTimeout(uint16_t timeoutmins) {
 
   // Compare with timeout value
   if (elapsed.totalseconds() / 60 >= timeoutmins) {
+    DEBUG2N("Elapsed: ", elapsed.totalseconds() / 60);
     return true;  // timeout occurred
   }
   return false;  // still within allowed time

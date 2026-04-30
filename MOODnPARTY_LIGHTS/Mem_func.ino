@@ -55,6 +55,7 @@ void loadParameters() {
   DEBUG2N("TimeOff:\t", DateTime(param.TIMEOFF).timestamp(DateTime::TIMESTAMP_TIME));
   DEBUG2N("WiFiOn:\t", DateTime(param.WIFION).timestamp(DateTime::TIMESTAMP_TIME));
   DEBUG2N("WiFiOff:\t", param.WIFIOFF);
+  DEBUG2XN("OPTION2:\t", param.OPTION2);
 }
 
 /** Save Time to EEPROM */
@@ -93,4 +94,5 @@ void initParameters() {
   DEBUGN("Set to default");
   saveCredentials();
   saveParameters();
+  saveTime();
 }

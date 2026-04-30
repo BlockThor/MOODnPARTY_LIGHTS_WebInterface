@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61 };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 6)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 7)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -156,6 +156,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61 };
  *    0.5.4 - Move additional params to Settings Tab (rename: Sofware), hide WiFi tab (temp not in use)
  *    0.5.5 - Add support for RGBW LEDs
  *    0.5.6 - WiFi AP Timeout | WiFi AP Auto On 
+ *    0.5.7 - Split LED Strip in two halfs playing symmetrically (Web interface: Settings->'Split in two' [split|solid])
  */
 
 #if DEBUGING
@@ -234,6 +235,7 @@ struct LampParameters {
   uint32_t TIMEOFF;
   uint32_t WIFION;
   uint16_t WIFIOFF;
+  uint8_t OPTION2;
 } param;
 
 #define COLORMODE_MONO 1
@@ -241,10 +243,11 @@ struct LampParameters {
 #define COLORMODE_RGB 3
 #define COLORMODE_PALETTE 4  // todo
 
+#define MNP_SPLIT 1
+
 extern const char index_html[];
 extern const char main_js[];
-extern const char vars_js[];
-// extern const char modes_js[];
+// extern const char vars_js[];
 extern const char style_css[];
 
 // QUICKFIX...See https://github.com/esp8266/Arduino/issues/263

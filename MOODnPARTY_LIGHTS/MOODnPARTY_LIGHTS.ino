@@ -25,26 +25,23 @@ void setup() {
 #endif
 
   DEBUGN("\n\n - = = = -");
-  DEBUG2N("ver: ",MNPL_VERSION);
+  DEBUG2N("ver: ", MNPL_VERSION);
   //  -= = = = = =  SETUP LAMP  = = = = = =-
   DEBUGN("WS2812FX setup");
-  lamp.init();
-  //  initParameters(); // uncomment for manual init all parameters during development
+  lampInit();
   loadParameters();
 
-  if (param.MAGIC == ESP.getChipId()) {  // First start, need init ?
+  if (param.MAGIC == ESP.getChipId()) {
     applyParameters();
     DEBUGN("ApplyParameters");
-    loadTime();
   } else {
+    DEBUG2XN("Init: no ChipID:", ESP.getChipId());
+    DEBUG2XN("MAGIC: ", param.MAGIC);
     initParameters();
-    DEBUGN("Init");
   }
+  loadTime();
 
-  lamp.start();
-  DEBUGN("Lamp Start");
-  lamp.service();
-  // DEBUGN("First Lamp Service");
+  lampStart();
 
   //  -= = = = = =  SETUP WIFI  = = = = = =-
   loadCredentials();
@@ -56,8 +53,6 @@ void setup() {
   }
 
   lastHeartbeat = now;
-  // DEBUGN("Setup File: \n - == -");
-  // Serial.println(vars_setup());
 }
 
 void loop() {

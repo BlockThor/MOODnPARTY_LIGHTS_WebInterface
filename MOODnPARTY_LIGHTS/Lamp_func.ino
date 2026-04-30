@@ -8,7 +8,7 @@ const LampParameters paramsDefault = {
   3,               // color mode 1-MONO; 2-DUO 3-RGB
   1000,            // speed
   0b00110010,      // options: X00000000 - rev?; 0XXX0000 - FADE_RATE; 0000X000 - GAMMA; 00000XX0 - SIZE_OPTION
-  128,             // med bri
+  64,             // med bri
   5,               // play mode: random all
   60,              // play time: 1 min
   LED_PIN,         // LED Pin
@@ -19,18 +19,65 @@ const LampParameters paramsDefault = {
   192861000,       // TimeOff 22:30
   192844800,       // WiFiOn 18:00
   10,              // WiFiOff 10 min
+  0,               // OPTION2 = 0 - Norm(not split)
 };
 
 
 
 void runLEDs() {
   checkAutoPlay();
-  // lamp.service();
   static unsigned long lastUpdate = 0;  //Throttle LED updates
   if (millis() - lastUpdate > 20) {     // 20 ms = 50 Hz
     lamp.service();
     lastUpdate = millis();
   }
+}
+
+// - - - - - - Lamp Functions - - - - - -
+void lampInit() {
+  lamp.init();
+      DEBUG2N("lamp.init completed, num seg: ", lamp.getNumSegments());
+}
+
+void lampCheckSeg() {
+  if (param.OPTION2 == 0x01) {                          // two segments
+    if (lamp.getNumSegments() == 1) {  // was 1 seg, need to change for TWO
+      lamp.resetSegments();
+      lamp.setSegment(0, 0, param.LEDCOUNT / 2 - 1);
+      lamp.setSegment(1, param.LEDCOUNT / 2, param.LEDCOUNT - 1);
+      DEBUG2N(" | num seg: ", lamp.getNumSegments());
+    }                                  // else no action needed
+  } else {                             // one segment
+    if (lamp.getNumSegments() != 1) {  // was 2 segs, need to change for ONE
+      lamp.resetSegments();
+      lamp.setSegment(0, 0, param.LEDCOUNT - 1);
+    }
+  }
+}
+void lampStart() {
+  lamp.start();
+  DEBUGN("Lamp Start");
+  lamp.service();
+}
+
+void lampSetMode(uint8_t m) {
+  lamp.setMode(0, m);
+  if(lamp.getNumSegments()==2) lamp.setMode(1, m);
+}
+
+void lampSetSpeed(uint16_t s) {
+  lamp.setSpeed(s);
+  if(lamp.getNumSegments()==2) lamp.setSpeed(1, s);
+}
+
+void lampSetColors(uint32_t* c) {
+  lamp.setColors(0, c);
+  if(lamp.getNumSegments()==2) lamp.setColors(1, c);
+}
+
+void lampSetOptions(uint8_t o) {
+  lamp.setOptions(0, o);
+  if(lamp.getNumSegments()==2) lamp.setOptions(1, o ^= (1<<7));
 }
 
 // - - - - - - Lamp State - - - - - -
