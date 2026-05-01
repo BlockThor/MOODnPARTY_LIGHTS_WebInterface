@@ -24,7 +24,7 @@ void saveParameters() {
   uint8_t addr = sizeof(wifidata) + 2;
   EEPROM.put(addr, param);
   if (EEPROM.commit()) {
-    Delay(10);
+    Delay(1);
   } else {
     DEBUGN("EEPROM error");
   }
@@ -64,7 +64,7 @@ void saveTime() {
   DateTime _time = rtc.now();
   EEPROM.put(addr, _time);
   if (EEPROM.commit()) {
-    Delay(10);
+    ;
   } else {
     DEBUGN("EEPROM error:Time");
   }
@@ -76,6 +76,7 @@ void loadTime() {
   EEPROM.get(addr, _time);
   rtc.adjust(_time);
   now = rtc.now();
+  lastHeartbeat = now;
   DEBUG2("Time loaded ", now.hour());
   DEBUG2N(":", now.minute());
 }

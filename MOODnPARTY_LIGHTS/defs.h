@@ -138,7 +138,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61 };
 // - = No  user adjustment beyond this point = -
 
 #define MNPL_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
-#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 7)
+#define MNPL_VERSION MNPL_VERSION_VAL(0, 5, 8)
 
 /* 
  *    0.1.0 - first release on GitHub
@@ -157,6 +157,7 @@ const uint8_t specModes[] =  {41, 47, 51, 52, 58, 59, 61 };
  *    0.5.5 - Add support for RGBW LEDs
  *    0.5.6 - WiFi AP Timeout | WiFi AP Auto On 
  *    0.5.7 - Split LED Strip in two halfs playing symmetrically (Web interface: Settings->'Split in two' [split|solid])
+ *    0.5.8 - Adapt to lightup White for RGBW LEDs
  */
 
 #if DEBUGING

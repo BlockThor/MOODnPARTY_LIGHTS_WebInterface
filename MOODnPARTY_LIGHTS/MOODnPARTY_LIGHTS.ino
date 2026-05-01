@@ -52,7 +52,6 @@ void setup() {
     setLampState(STATE_START_AP_STA);
   }
 
-  lastHeartbeat = now;
 }
 
 void loop() {

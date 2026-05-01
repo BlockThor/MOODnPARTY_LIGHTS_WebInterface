@@ -1,19 +1,6 @@
 
 uint32_t storeColors[3];  // = {BLUE, BLACK, RED};
 
-void applyParameters() {
-  lamp.setPin(param.LEDPIN);
-  lamp.setLength(param.LEDCOUNT);
-  lamp.updateType(param.LEDTYPE);
-  lampCheckSeg();
-  lampSetMode(param.MODE);
-  setColorMode(param.COLORMODE);
-  lampSetColors(storeColors);
-  lampSetSpeed(param.SPEED);
-  lampSetOptions(param.OPTION);
-  lamp.setBrightness(param.BRI);
-  playMode = param.MODE;
-}
 void applyColors() {
   setColorMode(param.COLORMODE);
   lampSetColors(storeColors);
@@ -21,18 +8,18 @@ void applyColors() {
 
 void setColorMode(uint8_t colorMode) {
   if (colorMode == COLORMODE_MONO) {
-    storeColors[0] = param.COLOR0;
-    storeColors[1] = param.COLOR1;
-    storeColors[2] = param.COLOR1;
+    storeColors[0] = rgb_to_rgbw(param.COLOR0);
+    storeColors[1] = rgb_to_rgbw(param.COLOR1);
+    storeColors[2] = storeColors[1];
   } else if (colorMode == COLORMODE_DUO) {
-    storeColors[0] = param.COLOR0;
-    storeColors[1] = param.COLOR1;
-    storeColors[2] = param.COLOR2;
+    storeColors[0] = rgb_to_rgbw(param.COLOR0);
+    storeColors[1] = rgb_to_rgbw(param.COLOR1);
+    storeColors[2] = rgb_to_rgbw(param.COLOR2);
   } else if (colorMode == COLORMODE_RGB) {
-    storeColors[0] = param.COLOR1;
-    storeColors[1] = param.COLOR1;
-    storeColors[2] = param.COLOR1;
-  } else {
+    storeColors[0] = rgb_to_rgbw(param.COLOR1);
+    storeColors[1] = storeColors[0];
+    storeColors[2] = storeColors[0];
+    // } else {
     // future modes?
   }
   lampSetColors(storeColors);
@@ -151,3 +138,21 @@ void checkAutoPlay() {
     auto_last_change = now;
   }
 }
+
+uint32_t rgb_to_rgbw(uint32_t color) {
+    uint8_t r = (color >> 16) & 0xFF;
+    uint8_t g = (color >> 8) & 0xFF;
+    uint8_t b = color & 0xFF;
+    
+    uint8_t w = r;
+    if (g < w) w = g;
+    if (b < w) w = b;
+    
+    r -= w;
+    g -= w;
+    b -= w;
+    
+    return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+
+

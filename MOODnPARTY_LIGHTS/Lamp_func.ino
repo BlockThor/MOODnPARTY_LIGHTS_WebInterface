@@ -33,6 +33,20 @@ void runLEDs() {
   }
 }
 
+void applyParameters() {
+  lamp.setPin(param.LEDPIN);
+  lamp.setLength(param.LEDCOUNT);
+  lamp.updateType(param.LEDTYPE);
+  lampCheckSeg();
+  lampSetMode(param.MODE);
+  setColorMode(param.COLORMODE);
+  lampSetColors(storeColors);
+  lampSetSpeed(param.SPEED);
+  lampSetOptions(param.OPTION);
+  lamp.setBrightness(param.BRI);
+  playMode = param.MODE;
+}
+
 // - - - - - - Lamp Functions - - - - - -
 void lampInit() {
   lamp.init();
@@ -86,6 +100,7 @@ void setLampState(State s) {
   lampState = s;
   DEBUG2N(" set:", getNameLampState(getLampState()));
 }
+
 State getLampState() {
   return lampState;
 }

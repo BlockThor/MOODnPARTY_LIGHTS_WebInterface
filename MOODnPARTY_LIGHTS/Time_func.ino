@@ -3,21 +3,20 @@ void runTime() {
   runAutoOnOff();
   runWiFiTimout();
 
-  TimeSpan elapsed = now - lastHeartbeat;
+  // TimeSpan elapsed = now - lastHeartbeat;
 
   static bool done = false;
   if (now.second() % 5 == 0) {
     if (!done) {
-      Serial.print(now.timestamp(DateTime::TIMESTAMP_TIME));
-      DEBUG2(" | Lamp:", lamp.getModeName(lamp.getMode()));
-      DEBUG2(" | ", ESP.getFreeHeap());
 
-      if (getLampState() != STATE_RUNNING_NOWIFI && elapsed.totalseconds() > 60) {
-        DEBUG2N(" |  elapsed:", elapsed.totalseconds() / 60);
-      } else {
-        DEBUGN(" ");
-      }
-      saveTime();
+      DEBUG2N(" | ", ESP.getFreeHeap());
+
+      // if (getLampState() != STATE_RUNNING_NOWIFI && elapsed.totalseconds() > 60) {
+      //   DEBUG2N(" |  elapsed:", elapsed.totalseconds() / 60);
+      // } else {
+      //   DEBUGN(" ");
+      // }
+      // saveTime();
 
       if (ESP.getFreeHeap() < 30000) {
         DEBUG2N("Restart by LowHeap", ESP.getFreeHeap());
