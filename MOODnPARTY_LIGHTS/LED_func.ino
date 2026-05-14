@@ -30,7 +30,6 @@ void checkAutoPlay() {
 
   if (now < auto_last_change) auto_last_change = now;
   if (param.PLAYMODE > 0 && (now - auto_last_change > (param.PLAYTIME * 1000))) {  // cycle effect mode every 'param.PLAYTIME' seconds
-                                                                                   //    DEBUGN("Time to Autoplay");
     uint8_t num_modes;
     uint8_t prevMode = lamp.getMode();
     switch (param.PLAYMODE) {
@@ -140,19 +139,33 @@ void checkAutoPlay() {
 }
 
 uint32_t rgb_to_rgbw(uint32_t color) {
-    uint8_t r = (color >> 16) & 0xFF;
-    uint8_t g = (color >> 8) & 0xFF;
-    uint8_t b = color & 0xFF;
-    
-    uint8_t w = r;
-    if (g < w) w = g;
-    if (b < w) w = b;
-    
+  uint8_t r = (color >> 16) & 0xFF;
+  uint8_t g = (color >> 8) & 0xFF;
+  uint8_t b = color & 0xFF;
+
+  uint8_t w = r;
+  if (g < w) w = g;
+  if (b < w) w = b;
+
+  if (isRGBW(param.LEDTYPE)) {
     r -= w;
     g -= w;
     b -= w;
-    
-    return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+  }
+
+  return ((uint32_t)w << 24) | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
 }
 
-
+inline bool isRGBW(uint8_t value) {
+  switch (value) {
+    case 6:
+    case 9:
+    case 82:
+    case 161:
+    case 88:
+    case 164:
+      return false;  // belongs to group ONE
+    default:
+      return true;  // not in group ONE
+  }
+}

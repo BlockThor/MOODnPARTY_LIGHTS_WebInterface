@@ -141,6 +141,7 @@ void srv_handle_time() {
     webServer.send(400, "text/plain", "Missing timestamp");
   }
 }
+
 void srv_handle_timer() {
   DEBUG2N("Rcv srv_handle_timer: ", webServer.args());
   if (webServer.hasArg("on") && webServer.hasArg("off") && webServer.hasArg("won") && webServer.hasArg("woff")) {
@@ -172,10 +173,7 @@ void srv_handle_not_found() {
   webServer.client().stop();
 }
 
-
 void srv_handle_index_html() {
-  // DEBUG2N("header:", webServer.header());
-  // DEBUG2N("Name:", webServer.headerName());
   if (captivePortal()) {  // If caprive portal redirect instead of displaying the page.
     return;
   }
@@ -261,11 +259,6 @@ void srv_handle_vars_js() {
   webServer.client().stop();
 }
 
-// char urlBuf[32];
-// IPAddress ip = webServer.client().localIP();
-// snprintf(urlBuf, sizeof(urlBuf), "http://%u.%u.%u.%u", ip[0], ip[1], ip[2], ip[3]);
-
-
 void srv_handle_modes_js() {
   DEBUG(" modes.js ");
   webServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
@@ -339,9 +332,6 @@ void srv_handle_modes_js() {
   // Delay(100);
   webServer.client().stop();
 }
-
-
-
 
 void srv_handle_style_css() {
   webServer.sendHeader("Cache-Control", "no-cache");
@@ -495,8 +485,6 @@ void srv_handle_set() {
   param.OPTION = lamp.getOptions(0);
   saveParameters();
   webServer.send(200, "text/plain", "Ok");
-  // webServer.client().stop();  // Stop is needed because we sent no content length
-  //SOME WHERE HERE MOST PROBABLY SHOULD BE THE REASON FOR FREEZE WIFI MODULE AFTER SEVERAL CALLS
 }
 
 
